@@ -1,0 +1,9 @@
+{
+    "toggl": {
+        "api_key": "YOUR_TOGGL_API_KEY"
+    },
+    "tempo": {
+        "api_key": "YOUR_TEMPO_AUTH_TOKEN",
+        "user_id": "JIRA_TEMPO_USER_ID"
+    }
+}
