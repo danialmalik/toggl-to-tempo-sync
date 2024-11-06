@@ -4,6 +4,21 @@
 
 This repository contains scripts to automate the process of creating  Tempo worklogs in JIRA based on Toggl time entries.
 
+### Guidelines
+
+**Important**: Time entries added in Toggl Track must be in this pattern:
+
+`<JIRA_ISSUE_KEY>: <GENERAL_DESCRIPTION> -- <DESCRIPTION_FOR_TEMPO>`
+
+- `<JIRA_ISSUE_KEY>`: JIRA issue key for which the worklog is to be created.
+- `<GENERAL_DESCRIPTION>`: General description of the work done. This is just for your reference. This part will not be sent to JIRA.
+- `<DESCRIPTION_FOR_TEMPO>`: Description for the worklog entry in JIRA Tempo.
+
+Example:
+
+`ABC-123: Frontend big fix task -- Worked on fixing the bug `
+
+
 ## Usage
 
 ```sh
