@@ -1,4 +1,4 @@
-# Automation scripts for Toggle <-> JIRA Tempo
+# Automation scripts for Toggl Track <-> JIRA Tempo
 
 ## Description
 
@@ -16,19 +16,18 @@ This repository contains scripts to automate the process of creating  Tempo work
 
 Example:
 
-`ABC-123: Frontend big fix task -- Worked on fixing the bug `
+`ABC-123: Frontend bug fix task -- Worked on fixing the bug `
 
 
 ## Usage
 
 ```sh
-
-# Gives available commands and instructions
+# Prints available commands and instructions
 python cli.py
 ```
 
 ```sh
-# Get help for a given command
+# Prints help for a given command
 python cli.py <command> help
 ```
 
