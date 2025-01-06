@@ -23,7 +23,7 @@ def get_centered_string(string, length=70, padding_char="-"):
 
 
 def float_to_hours_minutes(value: float) -> str:
-    sign = "-" if value < 0 else "+"
+    sign = "+" if value > 0 else "" # - will be handled by the value
     return f"{sign}{int(value)}h {int((abs(value) % 1) * 60)}m"
 
 
@@ -274,6 +274,14 @@ def main(*args):
         print_help()
         return
 
+    Logger.log_info(
+        "LEGEND: "
+        f"{Logger.format_message('Paid Hours', Logger.SUCCESS)} / "
+        f"{Logger.format_message('Unpaid Hours', Logger.WARNING)} / "
+        f"Remaining Hours\n\n",
+    )
+
+
     tempos: dict = get_jira_projects()
 
     reference_date = args[0] if len(args) > 0 else None
@@ -299,11 +307,12 @@ def main(*args):
             )
             exit(1)
     else:
-        Logger.log_info("Getting hours till today")
+        Logger.log_info("Getting hours till today\n")
         reference_date = datetime.datetime.today().date()
 
     summary: LogsSummary = get_total_hours_summary(tempos, reference_date)
 
+    Logger.log_info("\n")
     Logger.log_info(
         get_centered_string("Daily Hours", padding_char="="), color=Logger._CYAN
     )
@@ -324,9 +333,11 @@ def main(*args):
             )
         )
 
+    Logger.log_info("\n")
     Logger.log_info(
         get_centered_string("Month Hours", padding_char="="), color=Logger._CYAN
     )
+
     Logger.log_info(
         get_left_justified_string(
             "Total Month Hours",
@@ -349,7 +360,7 @@ def main(*args):
 
     Logger.log_info(
         get_left_justified_string(
-            "Difference", f": {float_to_hours_minutes(difference)}"
+            "Difference", f": {Logger.format_message(float_to_hours_minutes(difference), Logger.INFO_SECONDARY)}"
         ),
         color,
     )
