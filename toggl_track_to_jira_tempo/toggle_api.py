@@ -35,7 +35,7 @@ class TogglTrackAPI:
 
     def _make_get_request(self, url, data=None, headers=None):
         data = data or {}
-        response = requests.get(url, params=data, headers=headers or self.headers)
+        response = requests.get(url, params=data, headers=headers or self.headers, timeout=5)
         response.raise_for_status()
         return response.json()
 

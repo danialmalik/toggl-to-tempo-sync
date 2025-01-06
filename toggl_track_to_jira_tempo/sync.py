@@ -77,7 +77,10 @@ def sync(start_date: str, end_date: str = None):
 
             except Exception as e:
                 if isinstance(e, requests.exceptions.HTTPError):
-                    error_message = e.response.json()
+                    try:
+                        error_message = e.response.json()
+                    except:
+                        error_message = e.response.text
                 else:
                     error_message = str(e)
 

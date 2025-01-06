@@ -1,4 +1,12 @@
+from collections import namedtuple
 import requests
+from datetime import datetime
+
+from utils import Logger
+
+
+HoursLog = namedtuple("HourLog", ["date", "hours"])
+
 
 class JiraTempoAPI:
     BASE_URL = "https://api.tempo.io/core"
@@ -15,7 +23,7 @@ class JiraTempoAPI:
             **self.headers,
             **(headers or {})
         }
-        response = requests.get(url, params=data, headers=headers)
+        response = requests.get(url, params=data, headers=headers, timeout=5)
         response.raise_for_status()
         return response.json()
 
@@ -24,7 +32,7 @@ class JiraTempoAPI:
             **self.headers,
             **(headers or {})
         }
-        response = requests.post(url, json=data, headers=headers)
+        response = requests.post(url, json=data, headers=headers, timeout=5)
         response.raise_for_status()
         return response.json()
 
@@ -40,6 +48,38 @@ class JiraTempoAPI:
                 "Authorization": f"Bearer {self.auth_token}"
             }
         raise ValueError("Auth token is required")
+
+
+    def get_worklogs_for_user(self, user_id: str, start_date: datetime, end_date: datetime, limit: int = 1000, offset: int = 0):
+        url = f"{self.BASE_URL}{self.API_VERSION}{self.WORKLOGS_ENDPOINT}/user/{user_id}"
+
+        data = {
+            "from": start_date.strftime('%Y-%m-%d'),
+            "to": end_date.strftime('%Y-%m-%d'),
+            "limit": limit,
+            "offset": offset
+        }
+
+        entries = []
+
+        while True:
+            response = self._make_get_request(url, data=data)
+            for log in response.get("results", []):
+                logged_time = log["timeSpentSeconds"] / 3600
+                start_date = datetime.strptime(log["startDate"], "%Y-%m-%d").date()
+
+                entries.append(HoursLog(start_date, logged_time))
+
+            next_api_url = response.get("metadata", {}).get("next", "")
+
+            if next_api_url:
+                offset = offset + limit
+                data["offset"] = offset
+            else:
+                break
+
+        return entries
+
 
     def add_worklog(self, issue_key: str, time_spent_seconds: int, start_date: str, start_time: str="", description: str=""):
         url = f"{self.BASE_URL}{self.API_VERSION}{self.WORKLOGS_ENDPOINT}"

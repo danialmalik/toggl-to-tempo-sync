@@ -1,31 +1,19 @@
 import calendar
 import datetime
-import json
-import logging
-import os
-import sys
 from collections import namedtuple
 from typing import List, Union
 
-from config import config
-
 import requests
 
-DEBUG = bool(os.environ.get("DEBUG", False))
+from toggle_api import TogglTrackAPI
+from jira_tempo_api import JiraTempoAPI, HoursLog
+from config import config
+from utils import Logger
 
-LOG_FORMAT = "%(levelname)-8s:: %(message)s"
 
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
-else:
-    logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
-
-TEMPO_API_BASE = os.environ.get("TEMPO_API_BASE", "https://api.tempo.io/4")
-TEMPO_API_WORKLOGS_ENDPOINT = os.environ.get(
-    "TEMPO_API_WORKLOGS_ENDPOINT", "/worklogs/user"
-)
-
-HoursLog = namedtuple("HourLog", ["date", "hours"])
+TOGGL_TRACK_AUTH_TOKEN = config.toggl.api_key
+JIRA_TEMPO_AUTH_TOKEN = config.tempo.api_key
+JIRA_TEMPO_ACCOUNT_ID = config.tempo.user_id
 
 
 def get_left_justified_string(left_string, *rest_strings, length=50, padding_char="-"):
@@ -150,30 +138,6 @@ class LogsSummary:
         return self.total_month_hours_so_far - self.required_hours_for_month
 
 
-class Logger:
-    BLUE = "\033[94m"
-    GREEN = "\033[92m"
-    RED = "\033[91m"
-    YELLOW = "\033[93m"
-    RESET = "\033[0m"
-    CYAN = "\033[96m"
-
-    @staticmethod
-    def log_info(message: str, color=None) -> None:
-        color = color or Logger.BLUE
-        logging.info(color + message + Logger.RESET)
-
-    @staticmethod
-    def log_success(message: str) -> None:
-        logging.info(Logger.GREEN + message + Logger.RESET)
-
-    @staticmethod
-    def log_error(message: str) -> None:
-        logging.error(Logger.RED + message + Logger.RESET)
-
-    @staticmethod
-    def log_debug(message: str) -> None:
-        logging.debug(Logger.YELLOW + message + Logger.RESET)
 
 
 def get_total_hours_summary(tempos, reference_date: datetime.date) -> LogsSummary:
@@ -235,45 +199,13 @@ def get_hours(tempo_details: dict, reference_date: datetime.date) -> List[HoursL
     first_day_month = reference_date.replace(day=1)
     Logger.log_debug(f"First day of month: {first_day_month}")
 
-    api_url = (
-        f"{TEMPO_API_BASE}{TEMPO_API_WORKLOGS_ENDPOINT}/{tempo_details['user']}?"
-        f"from={first_day_month.strftime('%Y-%m-%d')}&"
-        f"to={reference_date.strftime('%Y-%m-%d')}"
+    jira_tempo_api = JiraTempoAPI(account_id=JIRA_TEMPO_ACCOUNT_ID, auth_token=JIRA_TEMPO_AUTH_TOKEN)
+
+    return  jira_tempo_api.get_worklogs_for_user(
+        user_id=tempo_details["user"],
+        start_date=first_day_month,
+        end_date=reference_date,
     )
-
-    return get_hours_from_api(api_url, tempo_details["tempo_token"])
-
-
-def get_hours_from_api(
-    api_url: str, token: str, accumulative_hours: Union[None, List[HoursLog]] = None
-) -> List[HoursLog]:
-    if accumulative_hours is None:
-        accumulative_hours = []
-
-    Logger.log_debug(f"Getting hours from API: {api_url}")
-    response = requests.get(api_url, headers={"Authorization": f"Bearer {token}"})
-
-    response.raise_for_status()
-
-    response = response.json()
-
-    for log in response.get("results", []):
-        logged_time = log["timeSpentSeconds"] / 3600
-        start_date = datetime.datetime.strptime(log["startDate"], "%Y-%m-%d").date()
-
-        Logger.log_debug(
-            f"Adding {logged_time} hours for {start_date} :: {log['issue']['self']}"
-        )
-        accumulative_hours.append(HoursLog(start_date, logged_time))
-
-    next_api_url = response.get("metadata", {}).get("next", "")
-
-    if next_api_url:
-        Logger.log_debug(f"Next API URL: {next_api_url}")
-        return get_hours_from_api(next_api_url, token, accumulative_hours)
-    else:
-        return accumulative_hours
-
 
 def print_help():
     print("Usage: python cli.py summary [reference_date]")
