@@ -51,8 +51,9 @@ def sync(start_date: str, end_date: str = None):
         group=True,
         round_seconds_to=60,
         skip_entry_substr="SKIP",
-        exclude_tags=["banked_hours"],
+        exclude_tags=["banked_hours", "unpaid"],
         exclude_projects=["Hours Bank"],
+
     )
 
     for entry in entries:

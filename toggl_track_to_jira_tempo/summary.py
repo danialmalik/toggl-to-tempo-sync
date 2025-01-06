@@ -1,14 +1,12 @@
 import calendar
 import datetime
 from collections import namedtuple
-from typing import List, Union
-
-import requests
+from typing import Dict, List, Union
 
 from toggle_api import TogglTrackAPI
-from jira_tempo_api import JiraTempoAPI, HoursLog
+from jira_tempo_api import JiraTempoAPI
 from config import config
-from utils import Logger
+from utils import Logger, HoursLog
 
 
 TOGGL_TRACK_AUTH_TOKEN = config.toggl.api_key
@@ -29,8 +27,11 @@ def float_to_hours_minutes(value: float) -> str:
     return f"{sign}{int(value)}h {int((abs(value) % 1) * 60)}m"
 
 
+LoggedHours = namedtuple("LoggedHours", ["hours", "is_unpaid"])
+
+
 class LogsSummary:
-    hours_by_day: dict
+    hours_by_day: Dict[datetime.date, List[LoggedHours]]
     reference_date: datetime.date
 
     def __init__(self, reference_date: Union[datetime.date, None] = None) -> None:
@@ -47,17 +48,23 @@ class LogsSummary:
         else:
             return last_monday
 
-    def add_day_hours(self, day: datetime.date, hours: float) -> None:
-        self.hours_by_day[day] = self.hours_by_day.get(day, 0) + hours
+    def add_day_hours(self, day: datetime.date, hours: float, unpaid: bool = False) -> None:
+        if day not in self.hours_by_day:
+            self.hours_by_day[day] = []
 
-    def get_total_week_hours(self, within_current_month: bool = True) -> float:
+        self.hours_by_day[day].append(LoggedHours(hours, unpaid))
+
+    def get_total_week_paid_hours(self, within_current_month: bool = True) -> float:
+        """Return total number of logged paid hours in current week."""
         start_date = self.get_start_of_week(within_current_month=within_current_month)
 
         total_hours = 0
 
         for day in range(start_date.weekday(), 5):
             date = start_date + datetime.timedelta(days=day)
-            total_hours += self.hours_by_day.get(date, 0)
+            total_hours += sum(
+                hour.hours for hour in self.hours_by_day.get(date, []) if not hour.is_unpaid
+            )
 
         return total_hours
 
@@ -68,12 +75,26 @@ class LogsSummary:
         return num_working_days * 8
 
     @property
-    def total_month_hours_so_far(self) -> float:
+    def total_month_paid_hours_so_far(self) -> float:
         current = self.reference_date
         total_hours = 0
         for day in range(1, current.day + 1):
             date = datetime.date(current.year, current.month, day)
-            total_hours += self.hours_by_day.get(date, 0)
+            total_hours += sum(
+                hour.hours for hour in self.hours_by_day.get(date, []) if not hour.is_unpaid
+            )
+
+        return total_hours
+
+    @property
+    def total_month_unpaid_hours_so_far(self) -> float:
+        current = self.reference_date
+        total_hours = 0
+        for day in range(1, current.day + 1):
+            date = datetime.date(current.year, current.month, day)
+            total_hours += sum(
+                hour.hours for hour in self.hours_by_day.get(date, []) if hour.is_unpaid
+            )
 
         return total_hours
 
@@ -122,20 +143,13 @@ class LogsSummary:
 
         return reference_week_day * 8
 
-    def get_week_work_required_difference(
-        self, within_current_month: bool = True
-    ) -> float:
-        return self.get_total_week_hours(
-            within_current_month=within_current_month
-        ) - self.get_required_hours_for_week(within_current_month=within_current_month)
-
     @property
     def required_hours_for_month(self) -> float:
         return self.working_days_in_month_so_far * 8
 
     @property
     def month_work_required_difference(self) -> float:
-        return self.total_month_hours_so_far - self.required_hours_for_month
+        return self.total_month_paid_hours_so_far + self.total_month_unpaid_hours_so_far - self.required_hours_for_month
 
 
 
@@ -149,9 +163,12 @@ def get_total_hours_summary(tempos, reference_date: datetime.date) -> LogsSummar
     for tempo in tempos:
         Logger.log_debug(f"Getting hours for {tempo['name']}")
         logs_list: List[HoursLog] = get_hours(tempo, reference_date)
+        unpaid_hours: List[HoursLog] = get_unpaid_hours(reference_date)
 
         current_month_total = 0
+        current_month_unpaid_total = 0
         current_week_total = 0
+        current_week_unpaid_total = 0
 
         for log in logs_list:
             logs_summary.add_day_hours(log.date, log.hours)
@@ -160,23 +177,41 @@ def get_total_hours_summary(tempos, reference_date: datetime.date) -> LogsSummar
             if log.date >= week_start_date:
                 current_week_total += log.hours
 
+        for log in unpaid_hours:
+            logs_summary.add_day_hours(log.date, log.hours, unpaid=True)
+            current_month_unpaid_total += log.hours
+
+            if log.date >= week_start_date:
+                current_week_unpaid_total += log.hours
+
+        hours_msg_part = (
+            f"{Logger.format_message(float_to_hours_minutes(current_week_total), Logger.SUCCESS)} / "
+            f"{Logger.format_message(float_to_hours_minutes(current_week_unpaid_total), Logger.WARNING)}"
+        )
+
         Logger.log_info(
             get_left_justified_string(
                 f"Logged weekly hours for {tempo['name']}",
-                f": {float_to_hours_minutes(current_week_total)}",
+                f": {hours_msg_part}",
             )
+        )
+
+        hours_msg_part = (
+            f"{Logger.format_message(float_to_hours_minutes(current_month_total), Logger.SUCCESS)} / "
+            f"{Logger.format_message(float_to_hours_minutes(current_month_unpaid_total), Logger.WARNING)}"
         )
         Logger.log_info(
             get_left_justified_string(
                 f"Logged monthly hours for {tempo['name']}",
-                f": {float_to_hours_minutes(current_month_total)}",
+                f": {hours_msg_part}",
             )
         )
+
         total_hours_decimal += current_month_total
 
     Logger.log_info(
         get_left_justified_string(
-            "Logged monthly hours decimal", f": {total_hours_decimal}"
+            "Logged monthly (paid) hours decimal", f": {Logger.format_message(str(total_hours_decimal), Logger.SUCCESS)}"
         )
     )
 
@@ -186,10 +221,32 @@ def get_total_hours_summary(tempos, reference_date: datetime.date) -> LogsSummar
 def get_jira_projects() -> dict:
     return [
         {
-            "name": "Project",
+            "name": "AutoSync",
             "user": config.tempo.user_id,
             "tempo_token": config.tempo.api_key,
         }
+    ]
+
+def get_unpaid_hours(reference_date: datetime.date) -> List[HoursLog]:
+    toggl_api_client = TogglTrackAPI(auth_token=TOGGL_TRACK_AUTH_TOKEN)
+
+    start_date = reference_date.replace(day=1).strftime("%Y-%m-%d")
+    end_date = reference_date.strftime("%Y-%m-%d")
+
+    entries = toggl_api_client.get_time_entries(
+        start_date=start_date,
+        end_date=end_date,
+        group=True,
+        round_seconds_to=60,
+        skip_entry_substr="SKIP",
+        include_tags=["unpaid"],
+    )
+
+
+    return [
+        HoursLog(
+            date=datetime.datetime.strptime(entry["start"], "%Y-%m-%dT%H:%M:%S+00:00").date(), hours=entry["duration"] / 3600
+        ) for entry in entries
     ]
 
 
@@ -248,18 +305,27 @@ def main(*args):
     summary: LogsSummary = get_total_hours_summary(tempos, reference_date)
 
     Logger.log_info(
-        get_centered_string("Daily Hours", padding_char="="), color=Logger.CYAN
+        get_centered_string("Daily Hours", padding_char="="), color=Logger._CYAN
     )
-    for day, hours in summary.hours_by_day.items():
+
+    for day, hours in sorted(summary.hours_by_day.items(), key=lambda x: x[0]):
         week_day_name = calendar.day_name[day.weekday()]
+
+        hours_msgs = []
+        for hour in hours:
+            if hour.is_unpaid:
+                hours_msgs.append(Logger.format_message(f"{float_to_hours_minutes(hour.hours)}", Logger.WARNING))
+            else:
+                hours_msgs.append(Logger.format_message(f"{float_to_hours_minutes(hour.hours)}", Logger.SUCCESS))
+
         Logger.log_info(
             get_left_justified_string(
-                f"{day} [{week_day_name}]", f": {float_to_hours_minutes(hours)}"
+                f"{day} [{week_day_name}]", f": {'/'.join(hours_msgs)}"
             )
         )
 
     Logger.log_info(
-        get_centered_string("Month Hours", padding_char="="), color=Logger.CYAN
+        get_centered_string("Month Hours", padding_char="="), color=Logger._CYAN
     )
     Logger.log_info(
         get_left_justified_string(
@@ -267,17 +333,19 @@ def main(*args):
             f": {float_to_hours_minutes(summary.total_month_hours)}"
         )
     )
+
     difference: float = summary.month_work_required_difference
 
     Logger.log_info(
         get_left_justified_string(
-            "Logged Hours / required hours so far",
-            f": {float_to_hours_minutes(summary.total_month_hours_so_far)} / ",
+            "Paid / Unpaid / Required hours so far",
+            f": {Logger.format_message(float_to_hours_minutes(summary.total_month_paid_hours_so_far), Logger.SUCCESS)} / ",
+            f"{Logger.format_message(float_to_hours_minutes(summary.total_month_unpaid_hours_so_far), Logger.WARNING)} / ",
             f"{float_to_hours_minutes(summary.required_hours_for_month)}",
         )
     )
 
-    color = Logger.GREEN if difference >= 0 else Logger.YELLOW
+    color = Logger._GREEN if difference >= 0 else Logger._YELLOW
 
     Logger.log_info(
         get_left_justified_string(

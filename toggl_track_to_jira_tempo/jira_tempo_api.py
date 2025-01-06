@@ -2,10 +2,9 @@ from collections import namedtuple
 import requests
 from datetime import datetime
 
-from utils import Logger
+from utils import Logger, HoursLog
 
 
-HoursLog = namedtuple("HourLog", ["date", "hours"])
 
 
 class JiraTempoAPI:

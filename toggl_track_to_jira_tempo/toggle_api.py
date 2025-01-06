@@ -51,6 +51,7 @@ class TogglTrackAPI:
         skip_entry_substr: str = "",
         exclude_projects: list[str]=None,
         exclude_tags: list[str]=None,
+        include_tags: list[str]=None,
     ):
         only_start_date = False
         exclude_projects = exclude_projects or []
@@ -89,6 +90,11 @@ class TogglTrackAPI:
                 entry for entry in entries if entry["project_id"] not in project_ids
             ]
 
+        if include_tags:
+            entries = [
+                entry for entry in entries if any(tag in entry["tags"] for tag in include_tags)
+            ]
+
         if only_start_date:
             entries = [
                 entry
@@ -116,10 +122,9 @@ class TogglTrackAPI:
 
         if round_seconds_to:
             for entry in entries:
-                # round up or down to the nearest minute
                 entry["duration"] = round(entry["duration"]/round_seconds_to) * round_seconds_to
 
-        return sorted(entries, key=lambda entry: entry["description"])
+        return sorted(entries, key=lambda entry: entry["id"])
 
     def get_projects(self, filter_names: list[str]) -> Optional[int]:
         url = self._make_absolute_url(self.GET_USER_PROJECTS_ENDPOINT)
