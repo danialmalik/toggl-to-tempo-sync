@@ -278,7 +278,7 @@ def main(*args):
         "LEGEND: "
         f"{Logger.format_message('Paid Hours', Logger.SUCCESS)} / "
         f"{Logger.format_message('Unpaid Hours', Logger.WARNING)} / "
-        f"Remaining Hours\n\n",
+        f"Total Hours\n\n",
     )
 
 
@@ -321,15 +321,22 @@ def main(*args):
         week_day_name = calendar.day_name[day.weekday()]
 
         hours_msgs = []
-        for hour in hours:
-            if hour.is_unpaid:
-                hours_msgs.append(Logger.format_message(f"{float_to_hours_minutes(hour.hours)}", Logger.WARNING))
-            else:
-                hours_msgs.append(Logger.format_message(f"{float_to_hours_minutes(hour.hours)}", Logger.SUCCESS))
+        paid_hours = sum(
+            hour.hours for hour in hours if not hour.is_unpaid
+        )
+        unpaid_hours = sum(
+            hour.hours for hour in hours if hour.is_unpaid
+        )
+
+        if paid_hours:
+            hours_msgs.append(Logger.format_message(f"{float_to_hours_minutes(paid_hours)}", Logger.SUCCESS))
+
+        if unpaid_hours:
+            hours_msgs.append(Logger.format_message(f"{float_to_hours_minutes(unpaid_hours)}", Logger.WARNING))
 
         Logger.log_info(
             get_left_justified_string(
-                f"{day} [{week_day_name}]", f": {'/'.join(hours_msgs)}"
+                f"{day} [{week_day_name}]", f": {' / '.join(hours_msgs)}"
             )
         )
 

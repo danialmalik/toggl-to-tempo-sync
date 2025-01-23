@@ -16,12 +16,13 @@ else:
 HoursLog = namedtuple("HourLog", ["date", "hours"])
 
 class Logger:
+    _RESET = "\033[0m"
+
     _BLUE = "\033[94m"
     _GREEN = "\033[92m"
     _RED = "\033[31m"
     _BRIGHT_RED = "\033[91m"
     _YELLOW = "\033[93m"
-    _RESET = "\033[0m"
     _CYAN = "\033[96m"
     _ORANGE = "\033[33m"
 
