@@ -1,15 +1,15 @@
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 import requests
 from datetime import datetime
 
 from utils import Logger, HoursLog
-
+from jira_api import JiraAPI
 
 
 
 class JiraTempoAPI:
-    BASE_URL = "https://api.tempo.io/core"
-    API_VERSION = "/3"
+    BASE_URL = "https://api.tempo.io"
+    API_VERSION = "/4"
     WORKLOGS_ENDPOINT = "/worklogs"
 
     def __init__(self, account_id, auth_token):
@@ -79,13 +79,18 @@ class JiraTempoAPI:
 
         return entries
 
+    def get_worklogs_for_issue(self, issue_key: str):
+        url = f"{self.BASE_URL}{self.API_VERSION}{self.WORKLOGS_ENDPOINT}?issueKey={issue_key}"
+        entries = self._make_get_request(url)["results"]
+        return entries
 
-    def add_worklog(self, issue_key: str, time_spent_seconds: int, start_date: str, start_time: str="", description: str=""):
+
+    def add_worklog(self, issue_id: str, time_spent_seconds: int, start_date: str, start_time: str="", description: str=""):
         url = f"{self.BASE_URL}{self.API_VERSION}{self.WORKLOGS_ENDPOINT}"
 
         request_body = {
             "authorAccountId": self.account_id,
-            "issueKey": issue_key,
+            "issueId": issue_id,
             "timeSpentSeconds": time_spent_seconds,
             "startDate": start_date,
             # "startTime": start_time,

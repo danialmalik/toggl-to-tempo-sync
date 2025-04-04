@@ -14,9 +14,16 @@ class _TempoConfig:
     user_id: str
 
 @dataclass
+class _JiraConfig:
+    subdomain: str
+    user_email: str
+    api_token: str
+
+@dataclass
 class Config:
     toggl: _ToggleConfig
     tempo: _TempoConfig
+    jira: _JiraConfig
 
 
 @functools.cache
@@ -35,6 +42,9 @@ def get_config():
         ),
         toggl=_ToggleConfig(
             **config_data["toggl"]
+        ),
+        jira=_JiraConfig(
+            **config_data["jira"]
         )
     )
 

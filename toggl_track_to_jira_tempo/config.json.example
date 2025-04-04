@@ -5,5 +5,10 @@
     "tempo": {
         "api_key": "YOUR_TEMPO_AUTH_TOKEN",
         "user_id": "JIRA_TEMPO_USER_ID"
+    },
+    "jira": {
+        "subdomain": "YOUR_JIRA_SUBDOMAIN",
+        "user_email": "YOUR_JIRA_USER_EMAIL",
+        "api_token": "YOUR_JIRA_API_TOKEN"
     }
 }

@@ -2,6 +2,7 @@ import os
 import datetime
 
 import requests
+from jira_api import JiraAPI
 from toggle_api import TogglTrackAPI
 from jira_tempo_api import JiraTempoAPI
 from pprint import pprint
@@ -44,6 +45,11 @@ def input_or_default(prompt: str, default: str):
 def sync(start_date: str, end_date: str = None):
     toggl_api = TogglTrackAPI(auth_token=TOGGL_TRACK_AUTH_TOKEN)
     jira_tempo_api = JiraTempoAPI(account_id=JIRA_TEMPO_ACCOUNT_ID, auth_token=JIRA_TEMPO_AUTH_TOKEN)
+    jira_api = JiraAPI(
+        subdomain=config.jira.subdomain,
+        user_email=config.jira.user_email,
+        api_token=config.jira.api_token
+    )
 
     entries = toggl_api.get_time_entries(
         start_date=start_date,
@@ -51,7 +57,7 @@ def sync(start_date: str, end_date: str = None):
         group=True,
         round_seconds_to=60,
         skip_entry_substr="SKIP",
-        exclude_tags=["banked_hours", "unpaid"],
+        exclude_tags=["banked_hours", "unpaid", "skip_tempo"],
         exclude_projects=["Hours Bank"],
 
     )
@@ -68,8 +74,9 @@ def sync(start_date: str, end_date: str = None):
             try:
                 print(f"Adding worklog for {issue_key} with {seconds_to_human_readable(duration)} on date {start_date} with description \"{issue_description}\".")
 
+                issue_id = jira_api.get_issue_details(issue_key)["id"]
                 jira_tempo_api.add_worklog(
-                    issue_key=issue_key,
+                    issue_id=issue_id,
                     time_spent_seconds=duration,
                     start_date=str(start_date),
                     description=issue_description
