@@ -49,3 +49,6 @@ def get_config():
     )
 
 config = get_config()
+
+
+API_REQUESTS_TIMEOUT_SECONDS = 30

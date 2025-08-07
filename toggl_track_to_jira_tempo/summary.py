@@ -228,10 +228,13 @@ def get_jira_projects() -> dict:
     ]
 
 def get_unpaid_hours(reference_date: datetime.date) -> List[HoursLog]:
-    toggl_api_client = TogglTrackAPI(auth_token=TOGGL_TRACK_AUTH_TOKEN)
-
     start_date = reference_date.replace(day=1).strftime("%Y-%m-%d")
     end_date = reference_date.strftime("%Y-%m-%d")
+    
+    # Log API request info
+    Logger.log_debug(f"=== API CALL === Toggl Track: Fetching unpaid hours from {start_date} to {end_date}")
+    
+    toggl_api_client = TogglTrackAPI(auth_token=TOGGL_TRACK_AUTH_TOKEN)
 
     entries = toggl_api_client.get_time_entries(
         start_date=start_date,
@@ -241,7 +244,9 @@ def get_unpaid_hours(reference_date: datetime.date) -> List[HoursLog]:
         skip_entry_substr="SKIP",
         include_tags=["unpaid"],
     )
-
+    
+    # Log API response info
+    Logger.log_debug(f"=== API RESPONSE === Toggl Track: Retrieved {len(entries)} unpaid time entries")
 
     return [
         HoursLog(
@@ -255,14 +260,25 @@ def get_hours(tempo_details: dict, reference_date: datetime.date) -> List[HoursL
 
     first_day_month = reference_date.replace(day=1)
     Logger.log_debug(f"First day of month: {first_day_month}")
+    
+    # Log API request info
+    Logger.log_debug(
+        f"=== API CALL === Jira Tempo: Fetching worklogs for user {tempo_details['user']} "
+        f"from {first_day_month} to {reference_date}"
+    )
 
     jira_tempo_api = JiraTempoAPI(account_id=JIRA_TEMPO_ACCOUNT_ID, auth_token=JIRA_TEMPO_AUTH_TOKEN)
 
-    return  jira_tempo_api.get_worklogs_for_user(
+    worklogs = jira_tempo_api.get_worklogs_for_user(
         user_id=tempo_details["user"],
         start_date=first_day_month,
         end_date=reference_date,
     )
+    
+    # Log API response info
+    Logger.log_debug(f"=== API RESPONSE === Jira Tempo: Retrieved {len(worklogs)} worklogs")
+    
+    return worklogs
 
 def print_help():
     print("Usage: python cli.py summary [reference_date]")

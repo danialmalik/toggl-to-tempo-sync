@@ -5,7 +5,7 @@ import logging
 DEBUG = bool(os.environ.get("DEBUG", False))
 
 # LOG_FORMAT = "%(levelname)-8s:: %(message)s"
-LOG_FORMAT = "        %(message)s"
+LOG_FORMAT = "%(message)s"
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)

@@ -7,6 +7,7 @@ from toggle_api import TogglTrackAPI
 from jira_tempo_api import JiraTempoAPI
 from pprint import pprint
 from config import config
+from utils import Logger
 
 
 TOGGL_TRACK_AUTH_TOKEN = config.toggl.api_key
@@ -15,31 +16,35 @@ JIRA_TEMPO_ACCOUNT_ID = config.tempo.user_id
 
 
 def confirm(message: str):
-    print(message)
+    Logger.log_info(message)
 
-    print("Confirm? [y/n]: ", end="")
+    confirm_prompt = Logger.format_message("Confirm? [y/n]: ", Logger.INFO_SECONDARY)
+    Logger.log_info_raw(confirm_prompt)
     return input(f"{message} [y/n]: ").lower().strip() == "y"
 
 def input_choice(prompt: str, choices: list):
-    print(prompt)
+    Logger.log_info(prompt)
     for i, choice in enumerate(choices):
-        print(f"{i+1}. {choice}")
+        choice_formatted = Logger.format_message(choice, Logger.INFO_SECONDARY)
+        Logger.log_info(f"{i+1}. {choice_formatted}")
 
     choice = input(f"Enter choice [1-{len(choices)}]: ")
     try:
         return choices[int(choice)-1]
     except (ValueError, IndexError, KeyError):
-        print("Invalid choice. Please try again.")
+        Logger.log_error("Invalid choice. Please try again.")
         return input_choice(prompt, choices)
 
 def wait_for_enter(msg: str):
-    input(f"{msg}. Press enter to continue...")
+    formatted_msg = Logger.format_message(f"{msg}. Press enter to continue...", Logger.INFO_SECONDARY)
+    input(formatted_msg)
 
 def seconds_to_human_readable(seconds: int):
     return str(datetime.timedelta(seconds=seconds))
 
 def input_or_default(prompt: str, default: str):
-    value = input(f"{prompt} [{default}]: ")
+    default_formatted = Logger.format_message(default, Logger.INFO_SECONDARY)
+    value = input(f"{prompt} [{default_formatted}]: ")
     return value or default
 
 def sync(start_date: str, end_date: str = None):
@@ -72,36 +77,67 @@ def sync(start_date: str, end_date: str = None):
 
         while True:
             try:
-                print(f"Adding worklog for {issue_key} with {seconds_to_human_readable(duration)} on date {start_date} with description \"{issue_description}\".")
+                # Format log variables with appropriate colors
+                issue_key_formatted = Logger.format_message(issue_key, Logger.INFO_SECONDARY)
+                duration_formatted = Logger.format_message(seconds_to_human_readable(duration), Logger.SUCCESS)
+                date_formatted = Logger.format_message(str(start_date), Logger.INFO_SECONDARY)
+                desc_formatted = Logger.format_message(f"\"{issue_description}\"", Logger.INFO_SECONDARY)
 
-                issue_id = jira_api.get_issue_details(issue_key)["id"]
+                # Get issue details including summary
+                issue_details = jira_api.get_issue_details(issue_key)
+                issue_id = issue_details["id"]
+                issue_summary = issue_details.get("fields", {}).get("summary", "")
+                summary_formatted = Logger.format_message(f"\"{issue_summary}\"", Logger.INFO_SECONDARY)
+
+                Logger.log_info(f"Adding worklog for {issue_key_formatted} with {duration_formatted} on date {date_formatted}")
+                Logger.log_info(f"Issue summary: {summary_formatted}")
+                Logger.log_info(f"Description: {desc_formatted}")
+
+                # Check if issue summary contains "Moved to" or "not in use" (case insensitive)
+                if issue_summary and ("moved to" in issue_summary.lower() or "not in use" in issue_summary.lower()):
+                    warning_text = Logger.format_message("WARNING: This issue appears to be deprecated or moved.", Logger.WARNING)
+                    Logger.log_warning(warning_text)
+
+                    options = ["Continue Anyway", "Modify Details", "Skip"]
+                    choice = input_choice("Issue may be deprecated or moved. Choose an option:", options)
+
+                    if choice == "Skip":
+                        Logger.log_warning(f"Skipping worklog for {issue_key_formatted}...")
+                        break
+                    elif choice == "Modify Details":
+                        issue_key = input_or_default("Issue key", issue_key)
+                        duration = int(input_or_default("Time spent (seconds)", str(duration)))
+                        start_date = input_or_default("Start date (YYYY-MM-DD)", str(start_date))
+                        issue_description = input_or_default("Description", issue_description)
+                        continue
                 jira_tempo_api.add_worklog(
                     issue_id=issue_id,
                     time_spent_seconds=duration,
                     start_date=str(start_date),
                     description=issue_description
                 )
+                Logger.log_success("Done...\n")
                 break
 
             except Exception as e:
                 if isinstance(e, requests.exceptions.HTTPError):
-                    try:
-                        error_message = e.response.json()
-                    except:
-                        error_message = e.response.text
+                    error_message = e.response.text
                 else:
                     error_message = str(e)
 
-                print(f"Failed to add worklog for {issue_key}: {error_message}")
+                issue_key_formatted = Logger.format_message(issue_key, Logger.INFO_SECONDARY)
+                error_formatted = Logger.format_message(error_message, Logger.ERROR)
+                Logger.log_error(f"Failed to add worklog for {issue_key_formatted}: {error_formatted}")
 
-                choice = input_choice("Choose an option:", ["Retry", "Skip", "Manual Entry", "Open JIRA Issue", "Exit"])
+                options = ["Retry", "Skip", "Manual Entry", "Open JIRA Issue", "Exit"]
+                choice = input_choice("Choose an option:", options)
 
                 if choice == "Retry":
-                    print("Retrying...")
+                    Logger.log_info(f"Retrying worklog for {issue_key_formatted}...", Logger.INFO_SECONDARY)
                     continue
 
                 elif choice == "Skip":
-                    print("Skipping...")
+                    Logger.log_warning(f"Skipping worklog for {issue_key_formatted}...")
                     break
 
                 elif choice == "Exit":
@@ -115,7 +151,11 @@ def sync(start_date: str, end_date: str = None):
                     continue
 
                 elif choice == "Open JIRA Issue":
-                    url = f"https://trader.atlassian.net/browse/{issue_key.strip()}"
+                    issue_key_stripped = issue_key.strip()
+                    url = f"https://trader.atlassian.net/browse/{issue_key_stripped}"
+                    jira_url_formatted = Logger.format_message(url, Logger.INFO)
+                    issue_formatted = Logger.format_message(issue_key_stripped, Logger.INFO_SECONDARY)
+                    Logger.log_info(f"Opening JIRA issue {issue_formatted} in browser: {jira_url_formatted}")
                     os.system(f"open {url}")
 
                     wait_for_enter("Waiting for confirmation before retrying...")
@@ -134,8 +174,9 @@ def get_past_working_day() -> str:
 
 
 def print_help():
-    print("Usage: python cli.py sync [start_date] [end_date]")
-    print("start_date and end_date are optional. If not provided, the script will prompt for them.")
+    help_cmd = Logger.format_message("python cli.py sync [start_date] [end_date]", Logger.INFO_SECONDARY)
+    Logger.log_info(f"Usage: {help_cmd}")
+    Logger.log_info("start_date and end_date are optional. If not provided, the script will prompt for them.")
 
 
 def main(*args):
@@ -151,12 +192,14 @@ def main(*args):
     if len(args) == 2:
         end_date = args[1]
 
-    if not start_date:
-        last_working_day = get_past_working_day()
+    last_working_day = get_past_working_day()
 
-        start_date = input(f"Enter start date (yyyy-mm-dd) [{last_working_day}]: ") or last_working_day
+    if not start_date:
+        default_date = Logger.format_message(last_working_day, Logger.INFO_SECONDARY)
+        start_date = input(f"Enter start date (yyyy-mm-dd) [{default_date}]: ") or last_working_day
 
     if not end_date:
-        end_date = input(f"Enter end date (yyyy-mm-dd) [{last_working_day}]: ") or last_working_day
+        default_date = Logger.format_message(last_working_day, Logger.INFO_SECONDARY)
+        end_date = input(f"Enter end date (yyyy-mm-dd) [{default_date}]: ") or last_working_day
 
     sync(start_date, end_date)

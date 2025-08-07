@@ -2,6 +2,7 @@ from collections import defaultdict, namedtuple
 import requests
 from datetime import datetime
 
+from config import API_REQUESTS_TIMEOUT_SECONDS
 from utils import Logger, HoursLog
 from jira_api import JiraAPI
 
@@ -22,7 +23,7 @@ class JiraTempoAPI:
             **self.headers,
             **(headers or {})
         }
-        response = requests.get(url, params=data, headers=headers, timeout=5)
+        response = requests.get(url, params=data, headers=headers, timeout=API_REQUESTS_TIMEOUT_SECONDS)
         response.raise_for_status()
         return response.json()
 
@@ -31,7 +32,7 @@ class JiraTempoAPI:
             **self.headers,
             **(headers or {})
         }
-        response = requests.post(url, json=data, headers=headers, timeout=5)
+        response = requests.post(url, json=data, headers=headers, timeout=API_REQUESTS_TIMEOUT_SECONDS)
         response.raise_for_status()
         return response.json()
 
@@ -79,8 +80,8 @@ class JiraTempoAPI:
 
         return entries
 
-    def get_worklogs_for_issue(self, issue_key: str):
-        url = f"{self.BASE_URL}{self.API_VERSION}{self.WORKLOGS_ENDPOINT}?issueKey={issue_key}"
+    def get_worklogs_for_issue(self, issue_id: str):
+        url = f"{self.BASE_URL}{self.API_VERSION}{self.WORKLOGS_ENDPOINT}?issueId={issue_id}"
         entries = self._make_get_request(url)["results"]
         return entries
 

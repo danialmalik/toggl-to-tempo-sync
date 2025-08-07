@@ -4,6 +4,9 @@ from typing import Optional
 import requests
 import math
 
+
+from config import API_REQUESTS_TIMEOUT_SECONDS
+
 class TogglTrackAPI:
     BASE_URL = "https://api.track.toggl.com/api"
     API_VERSION = "/v9"
@@ -35,7 +38,7 @@ class TogglTrackAPI:
 
     def _make_get_request(self, url, data=None, headers=None):
         data = data or {}
-        response = requests.get(url, params=data, headers=headers or self.headers, timeout=5)
+        response = requests.get(url, params=data, headers=headers or self.headers, timeout=API_REQUESTS_TIMEOUT_SECONDS)
         response.raise_for_status()
         return response.json()
 

@@ -1,5 +1,4 @@
 import requests
-from requests.auth import HTTPBasicAuth
 import sys
 from config import config
 from collections import defaultdict
@@ -15,13 +14,16 @@ init(autoreset=True)
 def get_time_entries(issue_key, filter_user=None):
     """ Fetch and filter time entries logged against an issue. """
     api = JiraTempoAPI(config.tempo.user_id, config.tempo.api_key)
-    entries = api.get_worklogs_for_issue(issue_key)
+    jira_api = JiraAPI(config.jira.subdomain, config.jira.user_email, config.jira.api_token)
+    issue_id = jira_api.get_issue_details(issue_key)["id"]
+    entries = api.get_worklogs_for_issue(issue_id)
 
-    user_logs = defaultdict(float)  # Store time logs per user
+    user_logs = defaultdict(float)
     total_logged = 0
 
     for entry in entries:
-        user_name = entry["author"]["displayName"]  # Replaced email with displayName
+        user_data = jira_api.get_user_details(entry["author"]["accountId"])
+        user_name = user_data["displayName"]
         time_spent_hours = entry["timeSpentSeconds"] / 3600
 
         if filter_user and user_name.lower() != filter_user.lower():

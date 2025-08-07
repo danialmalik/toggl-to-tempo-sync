@@ -1,8 +1,10 @@
 import sys
 from sync import main as sync
 from summary import main as get_summary
+# from freezegun import freeze_time
 
 
+# @freeze_time("2025-03-31")
 def main():
     if len(sys.argv) < 2:
         print("Usage: python cli.py <command> [<args>]")
