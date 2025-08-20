@@ -163,5 +163,8 @@ cython_debug/
 # Config file
 config.json
 
+# Sync tracking database
+sync_records.db
+
 # Others
 .DS_Store

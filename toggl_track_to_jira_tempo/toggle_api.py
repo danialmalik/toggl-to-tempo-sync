@@ -48,13 +48,13 @@ class TogglTrackAPI:
     def get_time_entries(
         self,
         start_date: str,
-        end_date: str = None,
+        end_date: Optional[str] = None,
         group: bool = False,
         round_seconds_to: int = 60,
         skip_entry_substr: str = "",
-        exclude_projects: list[str]=None,
-        exclude_tags: list[str]=None,
-        include_tags: list[str]=None,
+        exclude_projects: Optional[list[str]] = None,
+        exclude_tags: Optional[list[str]] = None,
+        include_tags: Optional[list[str]] = None,
     ):
         only_start_date = False
         exclude_projects = exclude_projects or []
@@ -111,6 +111,7 @@ class TogglTrackAPI:
         if group:
             # return grouped entries with the same description and same date
             # duration should be summed up
+            # Also preserve original entry IDs for tracking purposes
             grouped_entries = {}
             for entry in entries:
                 description = entry["description"]
@@ -119,8 +120,19 @@ class TogglTrackAPI:
 
                 if key in grouped_entries:
                     grouped_entries[key]["duration"] += entry["duration"]
+                    # Add this entry's ID to the list of original IDs
+                    if "original_toggl_ids" not in grouped_entries[key]:
+                        grouped_entries[key]["original_toggl_ids"] = [grouped_entries[key]["id"]]
+                    grouped_entries[key]["original_toggl_ids"].append(entry["id"])
                 else:
-                    grouped_entries[key] = entry
+                    grouped_entries[key] = entry.copy()
+                    # Initialize the original IDs list with this entry's ID
+                    grouped_entries[key]["original_toggl_ids"] = [entry["id"]]
+
+            # Sort the original_toggl_ids to ensure consistent ordering
+            for entry in grouped_entries.values():
+                entry["original_toggl_ids"] = sorted(entry["original_toggl_ids"])
+
             entries = list(grouped_entries.values())
 
         if round_seconds_to:
@@ -129,7 +141,7 @@ class TogglTrackAPI:
 
         return sorted(entries, key=lambda entry: entry["id"])
 
-    def get_projects(self, filter_names: list[str]) -> Optional[int]:
+    def get_projects(self, filter_names: list[str]) -> list:
         url = self._make_absolute_url(self.GET_USER_PROJECTS_ENDPOINT)
         projects = self._make_get_request(url)
 

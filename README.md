@@ -62,6 +62,43 @@ python cli.py sync help
 python cli.py get-summary help
 ```
 
+- `sync-records`: Manage sync tracking records (new!)
+
+```sh
+# List all synced entries
+python cli.py sync-records list
+
+# Show sync statistics  
+python cli.py sync-records stats
+
+# List entries for a specific date range
+python cli.py sync-records list --start-date 2025-01-01 --end-date 2025-01-31
+
+# Use a custom database path
+python cli.py sync-records --db-path custom.db list
+
+# Delete a specific sync record (to allow re-syncing)
+python cli.py sync-records delete <entry_hash>
+
+# Clear all sync records (use with caution)
+python cli.py sync-records clear --confirm
+```## New Feature: Duplicate Prevention
+
+The sync tool now automatically tracks synced entries to prevent duplicates when re-running the sync process. Key features:
+
+- **Automatic tracking**: Every successful sync is recorded in a local SQLite database
+- **Smart duplicate detection**: Handles grouped entries and order-independent ID matching
+- **Resume capability**: Re-run sync commands safely - already synced entries will be skipped
+- **Management tools**: View, delete, and manage sync records as needed
+
+See [SYNC_TRACKING.md](SYNC_TRACKING.md) for detailed documentation.
+
+### Benefits
+- ✅ No more duplicate worklogs when re-running sync
+- ✅ Clear visibility into what has been synced
+- ✅ Ability to track and analyze your time entry patterns
+- ✅ Safe recovery options if you need to re-sync specific entries
+
 
 ## Tips
 
