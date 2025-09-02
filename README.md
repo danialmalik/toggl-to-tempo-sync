@@ -68,7 +68,7 @@ python cli.py get-summary help
 # List all synced entries
 python cli.py sync-records list
 
-# Show sync statistics  
+# Show sync statistics
 python cli.py sync-records stats
 
 # List entries for a specific date range
@@ -91,11 +91,29 @@ The sync tool now automatically tracks synced entries to prevent duplicates when
 - **Resume capability**: Re-run sync commands safely - already synced entries will be skipped
 - **Management tools**: View, delete, and manage sync records as needed
 
+## New Feature: Enhanced UI with Animated Progress
+
+The sync tool now features a beautiful, modern terminal interface with:
+
+- **🎯 Animated spinners**: Visual feedback during API calls (fetching, validating, syncing)
+- **📊 Progress tracking**: Clear progress indicators showing [current/total] entries
+- **🎨 Rich status display**: Emoji-based status indicators for success ✅, skip ⏭️, and failure ❌
+- **📋 Enhanced summaries**: Detailed sync statistics with success rates and visual formatting
+- **⚡ Real-time updates**: Live progress updates as entries are processed
+
+The new interface makes it easy to:
+- Track sync progress in real-time
+- Identify issues immediately with clear error indicators
+- See detailed statistics at completion
+- Understand what happened with each entry
+
 See [SYNC_TRACKING.md](SYNC_TRACKING.md) for detailed documentation.
 
 ### Benefits
 - ✅ No more duplicate worklogs when re-running sync
 - ✅ Clear visibility into what has been synced
+- ✅ Beautiful, professional terminal interface
+- ✅ Real-time progress feedback
 - ✅ Ability to track and analyze your time entry patterns
 - ✅ Safe recovery options if you need to re-sync specific entries
 

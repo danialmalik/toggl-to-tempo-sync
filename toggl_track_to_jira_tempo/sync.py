@@ -7,6 +7,7 @@ from jira_api import JiraAPI
 from toggle_api import TogglTrackAPI
 from jira_tempo_api import JiraTempoAPI
 from sync_tracker import SyncTracker
+from animated_progress import SyncProgressDisplay, create_api_loader
 from pprint import pprint
 from config import config
 from utils import Logger
@@ -61,31 +62,38 @@ def sync(start_date: str, end_date: Optional[str] = None):
     # Initialize sync tracker
     sync_tracker = SyncTracker()
 
-    entries = toggl_api.get_time_entries(
-        start_date=start_date,
-        end_date=end_date,
-        group=True,
-        round_seconds_to=60,
-        # skip_entry_substr="SKIP",
-        exclude_tags=["banked_hours", "unpaid", "skip_tempo"],
-        exclude_projects=["Hours Bank"],
+    # Fetch entries with animated loader
+    with create_api_loader("Fetching Toggl entries") as loader:
+        entries = toggl_api.get_time_entries(
+            start_date=start_date,
+            end_date=end_date,
+            group=True,
+            round_seconds_to=60,
+            # skip_entry_substr="SKIP",
+            exclude_tags=["banked_hours", "unpaid", "skip_tempo"],
+            exclude_projects=["Hours Bank"],
+        )
 
-    )
-
-    synced_count = 0
-    skipped_count = 0
     total_entries = len(entries)
 
-    Logger.log_info(f"Found {total_entries} entries to process...")
+    # Initialize progress display
+    progress = SyncProgressDisplay(total_entries)
+    progress.print_header()
 
     for entry in entries:
-        issue_key = entry["description"].split(":")[0]
+        issue_key = entry["description"].split(":")[0].strip()
         issue_description = "--" in entry["description"] and entry["description"].split("--")[1] or ""
         issue_description = issue_description.strip()
         duration = entry["duration"]
         datetime_obj = datetime.datetime.strptime(entry["start"], "%Y-%m-%dT%H:%M:%S+00:00")
         entry_date = datetime_obj.date()
         entry_date_str = str(entry_date)
+
+        # Format display strings
+        duration_formatted = seconds_to_human_readable(duration)
+
+        # Show entry processing start
+        progress.start_entry_processing(issue_key, duration_formatted, entry_date_str)
 
         # Get original Toggl IDs (either from grouped entry or single entry)
         original_toggl_ids = entry.get("original_toggl_ids", [entry["id"]])
@@ -98,30 +106,18 @@ def sync(start_date: str, end_date: Optional[str] = None):
             duration=duration,
             start_date=entry_date_str
         ):
-            issue_key_formatted = Logger.format_message(issue_key, Logger.INFO_SECONDARY)
-            duration_formatted = Logger.format_message(seconds_to_human_readable(duration), Logger.SUCCESS)
-            date_formatted = Logger.format_message(entry_date_str, Logger.INFO_SECONDARY)
-            Logger.log_warning(f"SKIPPED (already synced): {issue_key_formatted} with {duration_formatted} on {date_formatted}")
-            skipped_count += 1
+            progress.show_entry_skipped(issue_key)
             continue
 
         while True:
             try:
-                # Format log variables with appropriate colors
-                issue_key_formatted = Logger.format_message(issue_key, Logger.INFO_SECONDARY)
-                duration_formatted = Logger.format_message(seconds_to_human_readable(duration), Logger.SUCCESS)
-                date_formatted = Logger.format_message(entry_date_str, Logger.INFO_SECONDARY)
-                desc_formatted = Logger.format_message(f"\"{issue_description}\"", Logger.INFO_SECONDARY)
+                # Get issue details with loading animation
+                with create_api_loader("Validating JIRA issue") as loader:
+                    issue_details = jira_api.get_issue_details(issue_key)
+                    issue_id = issue_details["id"]
+                    issue_summary = issue_details.get("fields", {}).get("summary", "")
 
-                # Get issue details including summary
-                issue_details = jira_api.get_issue_details(issue_key)
-                issue_id = issue_details["id"]
-                issue_summary = issue_details.get("fields", {}).get("summary", "")
-                summary_formatted = Logger.format_message(f"\"{issue_summary}\"", Logger.INFO_SECONDARY)
-
-                Logger.log_info(f"Adding worklog for {issue_key_formatted} with {duration_formatted} on date {date_formatted}")
-                Logger.log_info(f"Issue summary: {summary_formatted}")
-                Logger.log_info(f"Description: {desc_formatted}")
+                progress.show_api_activity(f"Issue: {issue_summary}")
 
                 # Check if issue summary contains "Moved to" or "not in use" (case insensitive)
                 if issue_summary and ("moved to" in issue_summary.lower() or "not in use" in issue_summary.lower()):
@@ -132,7 +128,7 @@ def sync(start_date: str, end_date: Optional[str] = None):
                     choice = input_choice("Issue may be deprecated or moved. Choose an option:", options)
 
                     if choice == "Skip":
-                        Logger.log_warning(f"Skipping worklog for {issue_key_formatted}...")
+                        progress.show_entry_user_skipped("user skipped (deprecated issue)")
                         break
                     elif choice == "Modify Details":
                         issue_key = input_or_default("Issue key", issue_key)
@@ -141,13 +137,14 @@ def sync(start_date: str, end_date: Optional[str] = None):
                         issue_description = input_or_default("Description", issue_description)
                         continue
 
-                # Add worklog to Tempo
-                worklog_result = jira_tempo_api.add_worklog(
-                    issue_id=issue_id,
-                    time_spent_seconds=duration,
-                    start_date=entry_date_str,
-                    description=issue_description
-                )
+                # Add worklog to Tempo with loading animation
+                with create_api_loader("Syncing to Tempo") as loader:
+                    worklog_result = jira_tempo_api.add_worklog(
+                        issue_id=issue_id,
+                        time_spent_seconds=duration,
+                        start_date=entry_date_str,
+                        description=issue_description
+                    )
 
                 # Record successful sync
                 tempo_worklog_id = worklog_result.get("tempoWorklogId") if isinstance(worklog_result, dict) else None
@@ -165,8 +162,7 @@ def sync(start_date: str, end_date: Optional[str] = None):
                     }
                 )
 
-                Logger.log_success("Done...\n")
-                synced_count += 1
+                progress.show_entry_success()
                 break
 
             except Exception as e:
@@ -175,6 +171,9 @@ def sync(start_date: str, end_date: Optional[str] = None):
                 else:
                     error_message = str(e)
 
+                progress.show_entry_failed(f"API Error: {str(e)[:100]}...")
+
+                # Format variables for interactive prompts
                 issue_key_formatted = Logger.format_message(issue_key, Logger.INFO_SECONDARY)
                 error_formatted = Logger.format_message(error_message, Logger.ERROR)
                 Logger.log_error(f"Failed to add worklog for {issue_key_formatted}: {error_formatted}")
@@ -183,14 +182,15 @@ def sync(start_date: str, end_date: Optional[str] = None):
                 choice = input_choice("Choose an option:", options)
 
                 if choice == "Retry":
-                    Logger.log_info(f"Retrying worklog for {issue_key_formatted}...", Logger.INFO_SECONDARY)
+                    Logger.log_info(f"Retrying worklog for {issue_key_formatted}...")
                     continue
 
                 elif choice == "Skip":
-                    Logger.log_warning(f"Skipping worklog for {issue_key_formatted}...")
+                    progress.show_entry_user_skipped("user choice")
                     break
 
                 elif choice == "Exit":
+                    progress.print_summary()
                     exit(1)
 
                 elif choice == "Manual Entry":
@@ -211,14 +211,8 @@ def sync(start_date: str, end_date: Optional[str] = None):
                     wait_for_enter("Waiting for confirmation before retrying...")
                     continue
 
-    # Print summary
-    Logger.log_info("=" * 50)
-    Logger.log_info("SYNC SUMMARY")
-    Logger.log_info("=" * 50)
-    Logger.log_success(f"Successfully synced: {synced_count} entries")
-    Logger.log_warning(f"Skipped (already synced): {skipped_count} entries")
-    Logger.log_info(f"Total processed: {total_entries} entries")
-    Logger.log_info("=" * 50)
+    # Print enhanced summary
+    progress.print_summary()
 
 
 
