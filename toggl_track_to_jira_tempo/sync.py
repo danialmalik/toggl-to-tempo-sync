@@ -51,6 +51,14 @@ def input_or_default(prompt: str, default: str):
     return value or default
 
 def sync(start_date: str, end_date: Optional[str] = None):
+    """
+    Sync Toggl time entries to Jira Tempo.
+
+    Note: When manual entry corrections are made during sync failures,
+    the sync record is created using the ORIGINAL Toggl entry details.
+    This prevents the same Toggl entry from being processed again in future syncs,
+    even if the user modified the details before successful upload.
+    """
     toggl_api = TogglTrackAPI(auth_token=TOGGL_TRACK_AUTH_TOKEN)
     jira_tempo_api = JiraTempoAPI(account_id=JIRA_TEMPO_ACCOUNT_ID, auth_token=JIRA_TEMPO_AUTH_TOKEN)
     jira_api = JiraAPI(
@@ -81,13 +89,20 @@ def sync(start_date: str, end_date: Optional[str] = None):
     progress.print_header()
 
     for entry in entries:
-        issue_key = entry["description"].split(":")[0].strip()
-        issue_description = "--" in entry["description"] and entry["description"].split("--")[1] or ""
-        issue_description = issue_description.strip()
-        duration = entry["duration"]
+        # Store original entry details for sync tracking
+        original_issue_key = entry["description"].split(":")[0].strip()
+        original_issue_description = "--" in entry["description"] and entry["description"].split("--")[1] or ""
+        original_issue_description = original_issue_description.strip()
+        original_duration = entry["duration"]
         datetime_obj = datetime.datetime.strptime(entry["start"], "%Y-%m-%dT%H:%M:%S+00:00")
-        entry_date = datetime_obj.date()
-        entry_date_str = str(entry_date)
+        original_entry_date = datetime_obj.date()
+        original_entry_date_str = str(original_entry_date)
+
+        # Working variables that may be modified by user input
+        issue_key = original_issue_key
+        issue_description = original_issue_description
+        duration = original_duration
+        entry_date_str = original_entry_date_str
 
         # Format display strings
         duration_formatted = seconds_to_human_readable(duration)
@@ -98,13 +113,13 @@ def sync(start_date: str, end_date: Optional[str] = None):
         # Get original Toggl IDs (either from grouped entry or single entry)
         original_toggl_ids = entry.get("original_toggl_ids", [entry["id"]])
 
-        # Check if this entry has already been synced
+        # Check if this entry has already been synced (using original details)
         if sync_tracker.is_entry_synced(
             toggl_ids=original_toggl_ids,
-            issue_key=issue_key,
-            description=issue_description,
-            duration=duration,
-            start_date=entry_date_str
+            issue_key=original_issue_key,
+            description=original_issue_description,
+            duration=original_duration,
+            start_date=original_entry_date_str
         ):
             progress.show_entry_skipped(issue_key)
             continue
@@ -146,19 +161,27 @@ def sync(start_date: str, end_date: Optional[str] = None):
                         description=issue_description
                     )
 
-                # Record successful sync
+                # Record successful sync using ORIGINAL entry details to prevent re-processing
+                # This ensures that even if user manually modified details, the original Toggl entry won't be synced again
                 tempo_worklog_id = worklog_result.get("tempoWorklogId") if isinstance(worklog_result, dict) else None
                 sync_tracker.record_sync(
                     toggl_ids=original_toggl_ids,
-                    issue_key=issue_key,
-                    description=issue_description,
-                    duration=duration,
-                    start_date=entry_date_str,
+                    issue_key=original_issue_key,
+                    description=original_issue_description,
+                    duration=original_duration,
+                    start_date=original_entry_date_str,
                     tempo_worklog_id=tempo_worklog_id,
                     additional_data={
                         "issue_id": issue_id,
                         "issue_summary": issue_summary,
-                        "sync_date_range": f"{start_date} to {end_date or start_date}"
+                        "sync_date_range": f"{start_date} to {end_date or start_date}",
+                        "manually_modified": original_issue_key != issue_key or original_duration != duration or original_entry_date_str != entry_date_str,
+                        "actual_synced_details": {
+                            "issue_key": issue_key,
+                            "description": issue_description,
+                            "duration": duration,
+                            "start_date": entry_date_str
+                        } if (original_issue_key != issue_key or original_duration != duration or original_entry_date_str != entry_date_str) else None
                     }
                 )
 
@@ -194,10 +217,12 @@ def sync(start_date: str, end_date: Optional[str] = None):
                     exit(1)
 
                 elif choice == "Manual Entry":
+                    Logger.log_info(Logger.format_message("Entering manual correction mode:", Logger.INFO))
                     issue_key = input_or_default("Issue key", issue_key)
                     duration = int(input_or_default("Time spent (seconds)", str(duration)))
                     entry_date_str = input_or_default("Start date (YYYY-MM-DD)", entry_date_str)
                     issue_description = input_or_default("Description", issue_description)
+                    Logger.log_info(Logger.format_message("Note: Sync record will use original Toggl entry details to prevent duplicate processing.", Logger.INFO_SECONDARY))
                     continue
 
                 elif choice == "Open JIRA Issue":
