@@ -10,6 +10,7 @@ import argparse
 import sys
 from datetime import datetime
 from sync_tracker import SyncTracker
+from cli_defaults import DEFAULT_SYNC_DB_PATH
 from utils import Logger
 
 
@@ -118,8 +119,8 @@ def show_stats(args):
 
 def main(*args, **kwargs):
     parser = argparse.ArgumentParser(description="Manage Toggl-to-Tempo sync records")
-    parser.add_argument("--db-path", default="sync_records.db",
-                       help="Path to sync records database (default: sync_records.db)")
+    parser.add_argument("--db-path", default=DEFAULT_SYNC_DB_PATH,
+                       help=f"Path to sync records database (default: {DEFAULT_SYNC_DB_PATH})")
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 

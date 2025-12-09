@@ -5,6 +5,7 @@ from summary import main as get_summary
 # Import the individual functions instead of the main function
 from sync_records_cli import list_records, delete_record, clear_all, show_stats
 from sync_tracker import SyncTracker
+from cli_defaults import DEFAULT_SYNC_DB_PATH
 # from freezegun import freeze_time
 
 
@@ -16,8 +17,8 @@ def setup_sync_records_subparser(subparsers):
     )
     sync_records_parser.add_argument(
         "--db-path",
-        default="sync_records.db",
-        help="Path to sync records database (default: sync_records.db)"
+        default=DEFAULT_SYNC_DB_PATH,
+        help=f"Path to sync records database (default: {DEFAULT_SYNC_DB_PATH})"
     )
 
     # Create subparsers for sync-records
