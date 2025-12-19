@@ -5,6 +5,8 @@ import hashlib
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 
+from cli_defaults import DEFAULT_SYNC_DB_PATH
+
 
 class SyncTracker:
     """
@@ -12,7 +14,7 @@ class SyncTracker:
     Uses SQLite database to store sync records.
     """
 
-    def __init__(self, db_path: str = "sync_records.db"):
+    def __init__(self, db_path: str = DEFAULT_SYNC_DB_PATH):
         """Initialize the sync tracker with database path."""
         self.db_path = db_path
         self._init_database()
