@@ -1,26 +1,37 @@
-# Tempo Time Log Report — July 2026 (1–15)
+# Tempo Time Log Report — July 2026 (1–16)
 
 **Status: DRAFT — for your review before syncing to Tempo.** This is a reconstruction, not a record of fact. See "Flags" below before logging anything.
 
+**Revision history:**
+- v1: Initial reconstruction, Jul 1–15, 15-min ceiling rounding, `UNASSIGNED` bucket for org meetings.
+- v2: ZOL-5836 capped at 8h per your instruction, freed time redistributed by story points.
+- v3: incorporated the [Time Tracking Process (July 2026)](https://roadpost.atlassian.net/wiki/spaces/WOW/pages/2889908247/Time+Tracking+Process+July+2026#Non-project-Time) guide — rounding changed to **nearest 30 minutes** (was 15-min ceiling), non-project/misc time logged to **ZOL-4295**, and **2026-07-16** added.
+- **v4 (current)**: the two engineering-initiative meetings (Eng Initiatives Sync – FinOps+EngOps; Service Catalog review) are **not** ZOL-4295 — per your correction, these are not general non-project time, and you'll create a dedicated ticket for engineering-initiative work. Pulled back out into a separate **`PENDING-ENG-TICKET`** placeholder (1.5h) until that ticket exists.
+
 ## Scope
 
-- Period: **2026-07-01 to 2026-07-15** (today, 2026-07-16, excluded as requested).
-- Source of truth for total hours: Toggl (personal tracking, entries mostly undescribed).
-- Sources used to reconstruct ticket attribution: `july_meetings.csv`, GitHub PRs (`gh search prs`, `roadpostinc/MyZoleo`), Jira REST API (issues updated since 2026-07-01, assignee = me, incl. story points via `customfield_10105`).
+- Period: **2026-07-01 to 2026-07-16**.
+- Source of truth for total hours: Toggl (personal tracking).
+- Sources used to reconstruct ticket attribution: `july_meetings.csv`, GitHub PRs (`gh search prs`, `roadpostinc/MyZoleo`), Jira REST API (issues updated since 2026-07-01, assignee = me, incl. story points via `customfield_10105`), and the Confluence Time Tracking Process guide.
+
+## What changed based on the new policy guide
+
+1. **Rounding**: nearest half-hour per day (per your instruction and the guide's explicit "Round to the nearest half-hour" rule), replacing the previous 15-min-ceiling approach. This means the grand total can now land **below** raw Toggl hours on days that round down, not just above.
+2. **Non-project time → ZOL-4295**: the guide defines a per-space "miscellaneous time reporting epic" for non-project time — vacation, team/company meetings, general admin. For ZOLEO that's **ZOL-4295** ("ZOL misc time reporting"), confirmed live in Jira (Epic, To Do). This **absorbs the generic ceremonies** I'd previously been folding pro-rata into whichever dev ticket was active (standups, 1-1s, Touchpoint, Team Lead Briefing) — those are explicitly "team meetings" under the guide's Non-project definition, not project work.
+   - **Not included**: Eng Initiatives Sync (FinOps+EngOps) and the Service Catalog review — per your correction, these are engineering-initiative work, not generic non-project time. They're held in a separate **`PENDING-ENG-TICKET`** placeholder (1.5h total) until you create the dedicated ticket.
+3. **Kept as project time**: EPIC/Technical-Design walkthroughs and Sprint Planning stay split across the relevant stories by story points — the guide's Project-related Time section says planning/design work for an Epic should be logged against tasks under that Epic, so this is the closest available proxy (see flag below — ideally these move to dedicated Epic-level planning tasks if you have them).
 
 ## Reconciliation summary
 
 | | Hours |
 |---|---|
-| Raw Toggl total (Jul 1–15, exact) | 89.07h |
-| Logged total after rounding to 15-min increments | **90.25h** |
-| Rounding delta | +1.18h (≈1.3%) |
+| Raw Toggl total (Jul 1–16, exact) | 96.68h |
+| Logged total after rounding to nearest 30 min (per day) | **96.00h** |
+| Rounding delta | −0.68h (≈0.7%) |
 
-The rounding delta is expected: each day's total was ceiled to the nearest 15 minutes (per your instruction), and 11 working days of ceiling rounds the grand total up slightly. If you want exact-to-the-minute reconciliation instead of clean 15-min entries, tell me and I'll redo without the ceiling step.
+Raw daily Toggl totals, for reference:
 
-Raw daily Toggl totals (before rounding), for reference:
-
-| Date | Toggl total | Meeting hours (CSV) | Dev/other hours |
+| Date | Toggl total | Meeting/CSV hours | Dev/other hours |
 |---|---|---|---|
 | 2026-07-01 | 6.20h | 0.00h | 6.20h |
 | 2026-07-02 | 6.82h | 2.50h | 4.32h |
@@ -33,144 +44,142 @@ Raw daily Toggl totals (before rounding), for reference:
 | 2026-07-13 | 4.70h | 2.33h | 2.37h |
 | 2026-07-14 | 8.67h | 0.33h | 8.33h |
 | 2026-07-15 | 9.13h | 0.33h | 8.80h |
-| **Total** | **89.07h** | **17.17h** | **71.90h** |
+| 2026-07-16 | 7.62h | 1.33h (CSV) — actual entries used directly, see below | 6.28h |
+| **Total** | **96.68h** | | |
 
 ## Methodology
 
-1. **Meetings** (`july_meetings.csv`, restricted to Jul 2–15) were classified into three groups:
-   - **New-cycle planning** (EPIC Walkthroughs ×2, Technical Design Walkthroughs ×2, Sprint Planning): these cover the whole batch of stories being planned, so hours were split across the 5 "new cycle" tickets proportional to story points (ZOL-6968:3, ZOL-7394:3, ZOL-7424:2, ZOL-6960:1, ZOL-6941:1 = 10 points). ZOL-5836 (a pre-existing carryover ticket, not part of the "new cycle") and ZOL-6961 (excluded per your instruction) were not included in this split.
-   - **Generic/ceremony** (standups, 1-1s, Touchpoint, Team Lead Briefing): folded into whichever ticket(s) were the active dev allocation for that specific day, in the same ratio — logged as a **separate "Meeting" row** from the "Dev" row per your instruction, so you can see the meeting time and its rationale distinctly.
-   - **Non-ZOLEO / org-wide** (Eng Initiatives Sync – FinOps+EngOps; Service Catalog review for Operation Excellence and FinOps): no matching ticket exists in any project on this Jira site (checked all: `ACSP, ISSM, ITHD, ITI, ITIS, NI, PAULAI, TP, ZMA, ZOL`). Logged as **`UNASSIGNED`** — 1.50h total. Needs a decision (see flags below).
-   - **Topic-matched**: "MyZOLEO testing / launch plan" mapped to **ZOL-5836** ("[Track] WLT link forwarding for **Production release**") on keyword match.
+1. **Meetings, Jul 2–15** (`july_meetings.csv`), classified per the new policy:
+   - **Epic/Sprint planning** (EPIC Walkthroughs ×2, Technical Design Walkthroughs ×2, Sprint Planning): project time, split across the 5 "new cycle" tickets by story points (ZOL-6968:3, ZOL-7394:3, ZOL-7424:2, ZOL-6960:1, ZOL-6941:1 = 10 points).
+   - **Generic ceremonies** (standups, 1-1s, Touchpoint, Team Lead Briefing) → **ZOL-4295** (non-project, per the guide).
+   - **Non-ZOLEO/org, engineering-initiative meetings** (Eng Initiatives Sync – FinOps+EngOps; Service Catalog review) → **`PENDING-ENG-TICKET`** placeholder, **not** ZOL-4295 — per your correction, you'll create a dedicated ticket for these.
+   - **Topic-matched**: "MyZOLEO testing / launch plan" → **ZOL-5836** (production-release ticket, topic match).
 
-2. **Dev/other hours** (day total minus meetings) were allocated per your explicit direction:
-   - **ZOL-7424**: 1 full day (2026-07-09, matching PR #831 opened that day).
-   - **ZOL-6968**: half a day (half of 2026-07-15, matching PR #855 opened that day).
-   - **ZOL-6961**: 0 hours (excluded per your instruction).
-   - **ZOL-5836**: absorbed all dev time on days with no other ticket evidence (2026-07-01, 02, 03, 06, 07, plus the other half of 07-15) — this exceeds "at least 2 days" by a wide margin (see flag below).
-   - Remaining days (07-08, 10, 13, 14) had no specific ticket evidence, so were split by story points across the 3 **Done** tickets only (ZOL-7394:3, ZOL-6941:1, ZOL-6960:1 = 5 points), per your instruction to use story points on done tickets.
+2. **2026-07-16**: you'd added descriptions to most Toggl entries, so these were used directly instead of inference:
+   - `ZOL-6968: Zoleo Track URL updates` (47min) → ZOL-6968, dev.
+   - `Team lead stuff. reviewing tickets etc` (120min), `Standup` (30min), `KT Meeting with product` (30min) → ZOL-4295, non-project.
+   - `meeting: Pricing plan and track deployment walkthrough` (30min) + `track - launch go or no go meeting` (30min) → ZOL-5836 (both explicitly about the Track/production-release deployment).
+   - **3 undescribed entries (170min total)**: split 50/50 between "team leading activities" (→ ZOL-4295) and "currently in-progress tickets" (→ ZOL-5836 and ZOL-7424, the two tickets in "In Progress" status as of today, weighted by story points 1:2). This 50/50 split is my judgement call, not specified by you — flagged below.
 
-3. **Rounding**: every entry rounded up to the nearest 15 minutes; each day's entries were adjusted (drift absorbed into the largest entry that day) so the day's total lands exactly on its own ceiled 15-minute total.
+3. **Dev/other hours, Jul 1–15**, per your explicit direction (unchanged from v2):
+   - ZOL-7424: 1 full day (2026-07-09, PR #831).
+   - ZOL-6968: half a day (half of 2026-07-15, PR #855).
+   - ZOL-6961: 0 hours.
+   - ZOL-5836: capped at 8h total; the days with zero PR/Jira evidence (07-01, 02, 03, 06, 07, half of 07-15) had their dev pool redistributed across the other 5 active tickets by story points once ZOL-5836's share was capped.
+   - Remaining days (07-08, 10, 13, 14): split by story points across the 3 **Done** tickets (ZOL-7394:3, ZOL-6941:1, ZOL-6960:1).
 
-4. **2026-07-16 revision** (post-review): ZOL-5836 was capped at **8h total** (was 35.25h) per your instruction. The freed 27.25h was redistributed across the other 5 active tickets (ZOL-7394, ZOL-7424, ZOL-6968, ZOL-6960, ZOL-6941), proportional to story points, on the same days it was originally on (2026-07-01, 02, 03, 06, 07, and half of 07-15) — this is my best-judgement placeholder, not evidence-backed, and is called out per-row below. ZOL-6961 still gets 0h. The FinOps/EngOps sync and Service Catalog review meetings stay **UNASSIGNED** — per your note, these are engineering-initiative meetings with no dedicated ticket yet.
+4. **Rounding**: each day's entries rounded to the nearest 30 minutes, with drift absorbed into that day's largest entry so the day's total matches its own nearest-half-hour target exactly.
 
 ## Per-ticket summary
 
-| Ticket | Type / Status | Points | Summary | Dev hrs | Meeting hrs | Total hrs |
-|---|---|---|---|---|---|---|
-| **ZOL-7394** | Task / Done | 3 | Add workflows to auto-assign PR reviews (+ Slack digest) | 22.50h | 5.00h | **27.50h** |
-| **ZOL-7424** | Story / To Do | 2 | [MyZ][EIP-Cache-01] EIP read cache: Redis client factory refactor + eipCacheClient | 12.25h | 3.50h | **15.75h** |
-| **ZOL-6968** | Story / To Do | 3 | [CS][BE-4b] Lazy-upsert auto-provision + GET /cs/me [P1] | 12.00h | 3.50h | **15.50h** |
-| **ZOL-6960** | Story / Done | 1 | [MyZ][SPIKE-3] Billing Performance: EIP read caching strategy | 8.75h | 2.50h | **11.25h** |
-| **ZOL-6941** | Story / Done | 1 | [MyZ][FE-2] Account Balance: build header from GET /users/eip-details | 8.25h | 2.50h | **10.75h** |
-| **ZOL-5836** | Story / In Progress | 1 | [Track] WLT link forwarding for Production release | 7.00h | 1.00h | **8.00h** |
-| **ZOL-6961** | Story / To Do | 2 | [MyZ][SPIKE-4] Billing Performance: EIS/EngageIP database indexing | 0.00h | 0.00h | **0.00h** |
-| **UNASSIGNED / eng-initiative overhead** | — | — | FinOps/EngOps sync, Service Catalog review — no ticket yet | 0.00h | 1.50h | **1.50h** |
-| **TOTAL** | | | | **70.75h** | **19.50h** | **90.25h** |
+| Ticket | Type / Status | Points | Summary | Dev hrs | Meeting hrs | Non-project hrs | Total hrs |
+|---|---|---|---|---|---|---|---|
+| **ZOL-7394** | Task / Done | 3 | Add workflows to auto-assign PR reviews (+ Slack digest) | 25.0h | 4.0h | 0.0h | **29.0h** |
+| **ZOL-6968** | Story / To Do | 3 | [CS][BE-4b] Lazy-upsert auto-provision + GET /cs/me [P1] | 12.5h | 4.0h | 0.0h | **16.5h** |
+| **ZOL-7424** | Story / **In Progress** | 2 | [MyZ][EIP-Cache-01] EIP read cache: Redis client factory refactor + eipCacheClient | 12.0h | 2.5h | 0.0h | **14.5h** |
+| **ZOL-5836** | Story / In Progress | 1 | [Track] WLT link forwarding for Production release | 8.5h | 1.5h | 0.0h | **10.0h** |
+| **ZOL-4295** | Epic / To Do | — | ZOL misc time reporting (non-project / Opex) | 0.0h | 0.0h | 8.5h | **8.5h** |
+| **ZOL-6941** | Story / Done | 1 | [MyZ][FE-2] Account Balance: build header from GET /users/eip-details | 8.0h | 0.0h | 0.0h | **8.0h** |
+| **ZOL-6960** | Story / Done | 1 | [MyZ][SPIKE-3] Billing Performance: EIP read caching strategy | 8.0h | 0.0h | 0.0h | **8.0h** |
+| **PENDING-ENG-TICKET** *(no ticket yet)* | — | — | Eng Initiatives Sync (FinOps+EngOps) + Service Catalog review — awaiting a dedicated engineering-initiative ticket | 0.0h | 1.5h | 0.0h | **1.5h** |
+| **ZOL-6961** | Story / To Do | 2 | [MyZ][SPIKE-4] Billing Performance: EIS/EngageIP database indexing | 0.0h | 0.0h | 0.0h | **0.0h** |
+| **TOTAL** | | | | **74.0h** | **13.5h** | **8.5h** | **96.0h** |
+
+*Note: ZOL-6941 and ZOL-6960's small Epic-walkthrough meeting shares (~0.1–0.25h/day each) rounded away to 0 under 30-min-per-day rounding — a side effect of the coarser granularity, not an error.*
 
 ## Day-by-day detail (ready for Tempo entry, pending your sign-off)
 
 | Date | Ticket | Type | Hours | Notes |
 |---|---|---|---|---|
-| 2026-07-01 | ZOL-5836 | Dev | 1.50h | Capped per your 8h instruction (was 6.25h) |
-| 2026-07-01 | ZOL-6941 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-01 | ZOL-6960 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-01 | ZOL-6968 | Dev | 1.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-01 | ZOL-7394 | Dev | 1.25h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-01 | ZOL-7424 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-02 | ZOL-5836 | Dev | 0.75h | Capped per your 8h instruction (was 4.50h) |
-| 2026-07-02 | ZOL-6941 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-02 | ZOL-6941 | Meeting | 0.25h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 1/10 |
-| 2026-07-02 | ZOL-6960 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-02 | ZOL-6960 | Meeting | 0.25h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 1/10 |
-| 2026-07-02 | ZOL-6968 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-02 | ZOL-6968 | Meeting | 0.75h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
-| 2026-07-02 | ZOL-7394 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-02 | ZOL-7394 | Meeting | 0.75h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
-| 2026-07-02 | ZOL-7424 | Dev | 0.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-01 | ZOL-5836 | Dev | 1.00h | Capped per your 8h instruction |
+| 2026-07-01 | ZOL-6941 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-01 | ZOL-6960 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-01 | ZOL-6968 | Dev | 1.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-01 | ZOL-7394 | Dev | 1.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-01 | ZOL-7424 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-02 | ZOL-5836 | Dev | 1.00h | Capped per your 8h instruction |
+| 2026-07-02 | ZOL-6941 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-02 | ZOL-6960 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-02 | ZOL-6968 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-02 | ZOL-6968 | Meeting | 1.00h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
+| 2026-07-02 | ZOL-7394 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-02 | ZOL-7394 | Meeting | 1.00h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
+| 2026-07-02 | ZOL-7424 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
 | 2026-07-02 | ZOL-7424 | Meeting | 0.50h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 2/10 |
-| 2026-07-03 | UNASSIGNED | Meeting | 1.00h | Eng Initiatives Sync - FinOps + EngOps — engineering-initiative meeting, left open, needs a dedicated ticket |
-| 2026-07-03 | ZOL-5836 | Dev | 1.75h | Capped per your 8h instruction (was 7.50h) |
-| 2026-07-03 | ZOL-6941 | Dev | 0.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-03 | ZOL-6941 | Meeting | 0.25h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 1/10 |
-| 2026-07-03 | ZOL-6960 | Dev | 0.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-03 | ZOL-6960 | Meeting | 0.25h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 1/10 |
-| 2026-07-03 | ZOL-6968 | Dev | 1.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-03 | ZOL-6968 | Meeting | 0.75h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
-| 2026-07-03 | ZOL-7394 | Dev | 1.25h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-03 | ZOL-7394 | Meeting | 0.75h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
-| 2026-07-03 | ZOL-7424 | Dev | 1.25h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-03 | PENDING-ENG-TICKET | Meeting | 1.00h | Eng Initiatives Sync - FinOps + EngOps — engineering-initiative meeting, awaiting dedicated ticket |
+| 2026-07-03 | ZOL-5836 | Dev | 2.00h | Capped per your 8h instruction |
+| 2026-07-03 | ZOL-6941 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-03 | ZOL-6960 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-03 | ZOL-6968 | Dev | 1.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-03 | ZOL-6968 | Meeting | 1.00h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
+| 2026-07-03 | ZOL-7394 | Dev | 2.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-03 | ZOL-7394 | Meeting | 1.00h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 3/10 |
+| 2026-07-03 | ZOL-7424 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
 | 2026-07-03 | ZOL-7424 | Meeting | 0.50h | ZOLEO Detailed EPIC Walkthrough (New Cycle) — share by story points 2/10 |
-| 2026-07-06 | ZOL-5836 | Dev | 1.00h | Capped per your 8h instruction (was 4.75h) |
-| 2026-07-06 | ZOL-5836 | Meeting | 0.50h | Andrew/Danial 1-1 — generic, folded pro-rata into day's active ticket |
-| 2026-07-06 | ZOL-6941 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-06 | ZOL-6941 | Meeting | 0.25h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 1/10 |
-| 2026-07-06 | ZOL-6960 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-06 | ZOL-6960 | Meeting | 0.25h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 1/10 |
-| 2026-07-06 | ZOL-6968 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-06 | ZOL-6968 | Meeting | 0.75h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 3/10 |
-| 2026-07-06 | ZOL-7394 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-06 | ZOL-7394 | Meeting | 0.75h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 3/10 |
-| 2026-07-06 | ZOL-7424 | Dev | 0.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-06 | ZOL-4295 | Non-project | 0.50h | Generic team ceremony (1-1) — non-project per policy |
+| 2026-07-06 | ZOL-5836 | Dev | 1.00h | Capped per your 8h instruction |
+| 2026-07-06 | ZOL-6941 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-06 | ZOL-6960 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-06 | ZOL-6968 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-06 | ZOL-6968 | Meeting | 1.00h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 3/10 |
+| 2026-07-06 | ZOL-7394 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-06 | ZOL-7394 | Meeting | 1.00h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 3/10 |
+| 2026-07-06 | ZOL-7424 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
 | 2026-07-06 | ZOL-7424 | Meeting | 0.50h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 2/10 |
-| 2026-07-07 | ZOL-5836 | Dev | 1.25h | Capped per your 8h instruction (was 6.75h) |
-| 2026-07-07 | ZOL-6941 | Dev | 0.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-07 | ZOL-6941 | Meeting | 0.25h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 1/10 |
-| 2026-07-07 | ZOL-6960 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-07 | ZOL-6960 | Meeting | 0.25h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 1/10 |
-| 2026-07-07 | ZOL-6968 | Dev | 1.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-07 | ZOL-5836 | Dev | 2.00h | Capped per your 8h instruction |
+| 2026-07-07 | ZOL-6941 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-07 | ZOL-6960 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-07 | ZOL-6968 | Dev | 1.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
 | 2026-07-07 | ZOL-6968 | Meeting | 0.50h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 3/10 |
-| 2026-07-07 | ZOL-7394 | Dev | 1.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-07 | ZOL-7394 | Dev | 1.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
 | 2026-07-07 | ZOL-7394 | Meeting | 0.50h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 3/10 |
-| 2026-07-07 | ZOL-7424 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-07 | ZOL-7424 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
 | 2026-07-07 | ZOL-7424 | Meeting | 0.50h | ZOLEO EPIC's Technical Design's Walkthrough — share by story points 2/10 |
 | 2026-07-08 | ZOL-6941 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
-| 2026-07-08 | ZOL-6941 | Meeting | 0.25h | ZOLEO Story and Sprint Planning Session — share by story points 1/10 |
 | 2026-07-08 | ZOL-6960 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
-| 2026-07-08 | ZOL-6960 | Meeting | 0.25h | ZOLEO Story and Sprint Planning Session — share by story points 1/10 |
 | 2026-07-08 | ZOL-6968 | Meeting | 0.50h | ZOLEO Story and Sprint Planning Session — share by story points 3/10 |
-| 2026-07-08 | ZOL-7394 | Dev | 4.50h | Done; story-point share of unattributed dev pool |
-| 2026-07-08 | ZOL-7394 | Meeting | 0.75h | ZOLEO Story and Sprint Planning Session — share by story points 3/10 |
+| 2026-07-08 | ZOL-7394 | Dev | 5.00h | Done; story-point share of unattributed dev pool |
+| 2026-07-08 | ZOL-7394 | Meeting | 0.50h | ZOLEO Story and Sprint Planning Session — share by story points 3/10 |
 | 2026-07-08 | ZOL-7424 | Meeting | 0.50h | ZOLEO Story and Sprint Planning Session — share by story points 2/10 |
-| 2026-07-09 | ZOL-7424 | Dev | 6.75h | PR #831 opened this day; user-directed 1 full day |
-| 2026-07-09 | ZOL-7424 | Meeting | 1.00h | Touchpoint; MyZoleo Team Standup |
-| 2026-07-10 | UNASSIGNED | Meeting | 0.50h | Follow up - Service Catalog review for Operation Excellence and FinOps — engineering-initiative meeting, left open, needs a dedicated ticket |
+| 2026-07-09 | ZOL-4295 | Non-project | 1.00h | Touchpoint + Standup — non-project per policy |
+| 2026-07-09 | ZOL-7424 | Dev | 6.50h | PR #831 opened this day; user-directed 1 full day |
+| 2026-07-10 | PENDING-ENG-TICKET | Meeting | 0.50h | Service Catalog review — engineering-initiative meeting, awaiting dedicated ticket |
+| 2026-07-10 | ZOL-4295 | Non-project | 0.50h | Standup — non-project per policy |
 | 2026-07-10 | ZOL-6941 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
-| 2026-07-10 | ZOL-6941 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-10 | ZOL-6960 | Dev | 1.75h | Done; story-point share of unattributed dev pool |
-| 2026-07-10 | ZOL-6960 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-10 | ZOL-7394 | Dev | 5.00h | Done; story-point share of unattributed dev pool |
-| 2026-07-10 | ZOL-7394 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-13 | ZOL-5836 | Meeting | 0.25h | MyZOLEO testing / launch plan — topic matches ZOL-5836 production-release tracking |
-| 2026-07-13 | ZOL-6941 | Dev | 0.25h | Done; story-point share of unattributed dev pool |
-| 2026-07-13 | ZOL-6941 | Meeting | 0.75h | Andrew/Danial 1-1; MyZoleo Team Standup; Team Lead Briefing |
+| 2026-07-10 | ZOL-6960 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
+| 2026-07-10 | ZOL-7394 | Dev | 5.50h | Done; story-point share of unattributed dev pool |
+| 2026-07-13 | ZOL-4295 | Non-project | 1.50h | 1-1 + Standup + Team Lead Briefing — non-project per policy |
+| 2026-07-13 | ZOL-5836 | Meeting | 0.50h | MyZOLEO testing / launch plan — topic matches ZOL-5836 production-release tracking |
+| 2026-07-13 | ZOL-6941 | Dev | 0.50h | Done; story-point share of unattributed dev pool |
 | 2026-07-13 | ZOL-6960 | Dev | 0.50h | Done; story-point share of unattributed dev pool |
-| 2026-07-13 | ZOL-6960 | Meeting | 0.75h | Andrew/Danial 1-1; MyZoleo Team Standup; Team Lead Briefing |
-| 2026-07-13 | ZOL-7394 | Dev | 1.25h | Done; story-point share of unattributed dev pool |
-| 2026-07-13 | ZOL-7394 | Meeting | 1.00h | Andrew/Danial 1-1; MyZoleo Team Standup; Team Lead Briefing |
+| 2026-07-13 | ZOL-7394 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
+| 2026-07-14 | ZOL-4295 | Non-project | 0.50h | Standup — non-project per policy |
 | 2026-07-14 | ZOL-6941 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
-| 2026-07-14 | ZOL-6941 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-14 | ZOL-6960 | Dev | 1.75h | Done; story-point share of unattributed dev pool |
-| 2026-07-14 | ZOL-6960 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-14 | ZOL-7394 | Dev | 4.75h | Done; story-point share of unattributed dev pool |
-| 2026-07-14 | ZOL-7394 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-15 | ZOL-5836 | Dev | 0.75h | Capped per your 8h instruction (was 4.50h) |
-| 2026-07-15 | ZOL-5836 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-15 | ZOL-6941 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-15 | ZOL-6960 | Dev | 0.50h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-15 | ZOL-6968 | Dev | 5.25h | PR #855 opened this day (half-day, user-directed) + redistributed share of the ZOL-5836 reduction |
-| 2026-07-15 | ZOL-6968 | Meeting | 0.25h | MyZoleo Team Standup — generic, folded pro-rata |
-| 2026-07-15 | ZOL-7394 | Dev | 1.00h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-15 | ZOL-7424 | Dev | 0.75h | Redistributed share of the ZOL-5836 reduction (story-point split, best-judgement placeholder) |
-| 2026-07-XX | ZOL-6961 | — | 0.00h | Explicitly excluded per your instruction — no hours logged this batch |
+| 2026-07-14 | ZOL-6960 | Dev | 1.50h | Done; story-point share of unattributed dev pool |
+| 2026-07-14 | ZOL-7394 | Dev | 5.00h | Done; story-point share of unattributed dev pool |
+| 2026-07-15 | ZOL-4295 | Non-project | 0.50h | Standup — non-project per policy |
+| 2026-07-15 | ZOL-5836 | Dev | 1.00h | Capped per your 8h instruction |
+| 2026-07-15 | ZOL-6941 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-15 | ZOL-6960 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-15 | ZOL-6968 | Dev | 5.00h | PR #855 opened this day (half-day, user-directed) + redistributed share of ZOL-5836 reduction |
+| 2026-07-15 | ZOL-7394 | Dev | 1.00h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-15 | ZOL-7424 | Dev | 0.50h | Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) |
+| 2026-07-16 | ZOL-4295 | Non-project | 4.00h | "Team lead stuff. reviewing tickets etc" + Standup + KT Meeting with product + half of undescribed time |
+| 2026-07-16 | ZOL-5836 | Dev | 0.50h | Half of undescribed time, split across in-progress tickets by story points (1/3) |
+| 2026-07-16 | ZOL-5836 | Meeting | 1.00h | "Pricing plan and track deployment walkthrough" + "track - launch go or no go meeting" — both topic-match ZOL-5836 |
+| 2026-07-16 | ZOL-6968 | Dev | 1.00h | Explicitly labeled "ZOL-6968: Zoleo Track URL updates" |
+| 2026-07-16 | ZOL-7424 | Dev | 1.00h | Half of undescribed time, split across in-progress tickets by story points (2/3) |
+| — | ZOL-6961 | — | 0.00h | Explicitly excluded per your instruction |
 
 ## Flags — please review before syncing to Tempo
 
-1. **ZOL-5836 capped at 8h** (down from 35.25h), per your instruction. The freed 27.25h was spread across the other 5 active tickets (story-point proportional, same days), which is my best judgement, not evidence — there's still no PR/Jira trail for 2026-07-01, 02, 03, 06, 07, or the first half of 07-15, so treat these "Redistributed share..." rows as soft placeholders, not fact. If you recall which ticket that time actually went to, tell me and I'll move it directly instead of spreading it by points.
-2. **FinOps/EngOps Sync (07-03, 1.0h) and Service Catalog review (07-10, 0.5h) are intentionally left `UNASSIGNED`** — per your note, these are engineering-initiative meetings, not ZOLEO-project work, and there's no dedicated ticket for them yet. Once you create one (or decide on an existing eng-initiative ticket), these 1.5h can be moved there.
-3. **Meeting → ticket mapping is a best-effort guess**, not verified against meeting content/attendees. If you get dedicated tickets later for recurring ceremonies (standups, 1-1s, TL briefings), we can swap this logic out per your note.
-4. **PR search only covered `roadpostinc/MyZoleo`** via global `gh search prs --author=@me`. If you also contribute to `ZMA` (ZOLEO Mobile Apps) or another repo under a different account/org, that work wouldn't be captured here.
-5. **90.25h vs 89.07h raw** — the 1.18h gap is purely from ceiling each day to the nearest 15 minutes, not double-counting. Flag if you want it tightened.
+1. **ZOL-5836 still capped at 8h** for Jul 1–15 (per your earlier instruction), with 27.25h of unattributed early-week time spread across 5 other tickets by story points — this remains a soft placeholder, not evidence. Jul 16 activity is added on top (1.5h meeting + 0.5h undescribed-time share = 2.0h more), so ZOL-5836's Jul1-16 total is 10.0h.
+2. **`PENDING-ENG-TICKET` (1.5h)**: Eng Initiatives Sync (Jul 3, 1.0h) and Service Catalog review (Jul 10, 0.5h) are held against this placeholder, not ZOL-4295, per your correction. Once you create the real ticket, swap this label for the ticket key before syncing to Tempo.
+3. **The Jul 16 undescribed-time split (170min, 50/50 between ZOL-4295 and in-progress tickets, then 1:2 by points between ZOL-5836/ZOL-7424) is my judgement call** — you said "divide... among team leading activities and my currently in progress tickets" without a ratio. Tell me if you want a different split.
+4. **Account field**: the guide requires every ticket you log time against to have an "Account" value set (Capital vs Opex classification) — I haven't verified this for ZOL-5836/6941/6960/6968/7394/7424/6961/4295. Worth a quick check in Jira before syncing, since Tempo entries against tickets without an Account may get flagged by whoever audits this.
+5. **Epic/Sprint-planning meetings (11h total) are still split across specific stories by story points**, not logged against a dedicated Epic-level planning task — the guide implies those should exist ("Most Epics should have tasks representing the planning... work"). If you have those tickets, tell me and I'll re-route this time there instead.
+6. **PR search only covered `roadpostinc/MyZoleo`** via `gh search prs --author=@me`. If you also contribute to `ZMA` or another repo/account, that work isn't captured.
+7. **96.00h vs 96.68h raw** — the −0.68h delta is from nearest-30-min rounding per day (some days round down now, not just up, per the guide's actual rule). If you want this tightened, I can bias rounding within a day.
 
 ## Next step
 
