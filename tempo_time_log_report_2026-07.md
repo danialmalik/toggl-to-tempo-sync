@@ -8,7 +8,8 @@
 - v3: incorporated the [Time Tracking Process (July 2026)](https://roadpost.atlassian.net/wiki/spaces/WOW/pages/2889908247/Time+Tracking+Process+July+2026#Non-project-Time) guide — rounding changed to **nearest 30 minutes** (was 15-min ceiling), non-project/misc time logged to **ZOL-4295**, and **2026-07-16** added.
 - v4: the two engineering-initiative meetings (Eng Initiatives Sync – FinOps+EngOps; Service Catalog review) are **not** ZOL-4295 — per your correction, these are not general non-project time, and you'll create a dedicated ticket for engineering-initiative work. Pulled back out into a separate **`PENDING-ENG-TICKET`** placeholder (1.5h) until that ticket exists.
 - v5: ZOL-7394, ZOL-6968 and ZOL-7424 had too much placeholder (story-point-redistributed) dev time — trimmed each back to a small baseline and moved the excess to their real parent epics (**ZOL-6930** for ZOL-7394/ZOL-7424, **ZOL-6775** for ZOL-6968) and into ZOL-6960/ZOL-6941 (both capped at 25h) instead of the epic, per your instruction. Evidenced hours (actual PRs, explicit Toggl labels) were left untouched — only the unevidenced redistribution pool was moved. Grand total and every day's total are unchanged (96.00h); only the ticket split changed.
-- **v6 (current)**: added **2026-07-17** (9.37h raw / 9.50h rounded). Entries with explicit ticket numbers logged as-is (`ZOL-6968`, `ZOL-6971`, `ZOL-7534`, `ZOL-4295`). The FinOps meeting stays unassigned — held in `PENDING-ENG-TICKET` per your instruction, you'll create the ticket. One catch-all entry ("Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work", 4.03h across 3 separate Toggl entries) was split evenly 4 ways across ZOL-5836 / ZOL-6775 / ZOL-6930 / ZOL-4295 — see flag below, no weighting was specified. New grand total: **105.50h**.
+- v6: added **2026-07-17** (9.37h raw / 9.50h rounded). Entries with explicit ticket numbers logged as-is (`ZOL-6968`, `ZOL-6971`, `ZOL-7534`, `ZOL-4295`). The FinOps meeting stays unassigned — held in `PENDING-ENG-TICKET` per your instruction, you'll create the ticket. One catch-all entry ("Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work", 4.03h across 3 separate Toggl entries) was split evenly 4 ways across ZOL-5836 / ZOL-6775 / ZOL-6930 / ZOL-4295 — see flag below, no weighting was specified. Grand total: 105.50h.
+- **v7 (current)**: the cumulative nearest-30-min-per-day rounding was leaving 0.55h of raw Toggl time unlogged (105.50h logged vs 106.05h raw). Per your instruction, added that 0.5h to **ZOL-6971** (currently the lowest-hours real ticket, 1.0h → 1.5h), logged against 2026-07-17. This is a deliberate top-up, not additional evidence — it also means 2026-07-17 no longer matches its own raw Toggl total exactly (10.00h logged vs 9.37h raw that day), unlike every other day in this report. New grand total: **106.00h** (−0.05h vs raw, down from −0.55h).
 
 ## Scope
 
@@ -30,8 +31,9 @@
 | | Hours |
 |---|---|
 | Raw Toggl total (Jul 1–17, exact) | 106.05h |
-| Logged total after rounding to nearest 30 min (per day) | **105.50h** |
-| Rounding delta | −0.55h (≈0.5%) |
+| Logged total after rounding to nearest 30 min (per day) | 105.50h |
+| Logged total after +0.5h top-up to ZOL-6971 (see v7 note above) | **106.00h** |
+| Remaining delta vs raw | −0.05h (≈0.05%) |
 
 Raw daily Toggl totals, for reference:
 
@@ -89,10 +91,10 @@ Raw daily Toggl totals, for reference:
 | **ZOL-6930** | Epic / In Progress | — | [MyZ] Account: Billing & Payment Management — parent epic of ZOL-7424/6960/6941; also receiving ZOL-7394's excess + a share of Jul-17's "EIS Cache Epic" catch-all | 9.5h | 0.0h | 0.0h | **9.5h** |
 | **ZOL-6775** | Epic / In Progress | — | [CS] Role-Based Access Control & Admin UI — ZOL-6968's real parent epic | 4.0h | 0.0h | 0.0h | **4.0h** |
 | **PENDING-ENG-TICKET** *(no ticket yet)* | — | — | Eng Initiatives Sync (FinOps+EngOps) + Service Catalog review + FinOps Weekly Follow-up ×2 — awaiting a dedicated engineering-initiative ticket | 0.0h | 2.5h | 0.0h | **2.5h** |
-| **ZOL-6971** | Epic / Draft | — | Track launch | 1.0h | 0.0h | 0.0h | **1.0h** |
+| **ZOL-6971** | Epic / Draft | — | Track launch — includes a 0.5h rounding top-up (not evidence, see v7 note) | 1.5h | 0.0h | 0.0h | **1.5h** |
 | **ZOL-7534** | Story / To Do | — | [MyZ] Implement region based logic for myzoleo New UI | 0.0h | 0.5h | 0.0h | **0.5h** |
 | **ZOL-6961** | Story / To Do | 2 | [MyZ][SPIKE-4] Billing Performance: EIS/EngageIP database indexing | 0.0h | 0.0h | 0.0h | **0.0h** |
-| **TOTAL** | | | | **79.5h** | **16.0h** | **10.0h** | **105.5h** |
+| **TOTAL** | | | | **80.0h** | **16.0h** | **10.0h** | **106.0h** |
 
 *Note: ZOL-6941 and ZOL-6960's small Epic-walkthrough meeting shares (~0.1–0.25h/day each) rounded away to 0 under 30-min-per-day rounding — a side effect of the coarser granularity, not an error.*
 
@@ -191,7 +193,7 @@ Raw daily Toggl totals, for reference:
 | 2026-07-17 | ZOL-6775 | Dev | 1.00h | Share of catch-all entry "Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work" (RBAC Epic quarter, evenly split, no weights given) |
 | 2026-07-17 | ZOL-6930 | Dev | 1.00h | Share of catch-all entry "Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work" (EIS Cache Epic quarter — ZOL-6930 is the real epic housing both the EIP-cache work and the EIS/EngageIP-indexing spike; evenly split, no weights given) |
 | 2026-07-17 | ZOL-6968 | Dev | 1.50h | Explicitly labeled "ZOL-6968: CS RBAC Lazy upsert" |
-| 2026-07-17 | ZOL-6971 | Dev | 1.00h | Explicitly labeled "ZOL-6971: Track Launch Epic" — logged directly against the epic per your instruction to use ticket numbers as-is |
+| 2026-07-17 | ZOL-6971 | Dev | 1.50h | Explicitly labeled "ZOL-6971: Track Launch Epic" (1.00h) + 0.5h rounding top-up per your instruction — not evidence, just closing the raw-vs-logged gap on the ticket with the least hours logged |
 | 2026-07-17 | ZOL-7534 | Meeting | 0.50h | Explicitly labeled "ZOL-7534: Region based billing -- Meeting" |
 | — | ZOL-6961 | — | 0.00h | Explicitly excluded per your instruction |
 
@@ -211,6 +213,7 @@ Raw daily Toggl totals, for reference:
 12. **The 2026-07-17 catch-all split (4.03h across 3 Toggl entries, 4 named buckets) was divided evenly** — no weighting was given in "Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work." If your actual time split across those four wasn't even, tell me the ratio and I'll redo just this day.
 13. **`PENDING-ENG-TICKET` is now 2.5h** (added the two 2026-07-17 FinOps Weekly Follow-up entries, 0.5h + 0.4h raw). Still awaiting the real ticket key.
 14. **ZOL-6971 ("Track launch") is itself an Epic, currently in Draft status** — I logged its explicitly-labeled hour directly against it per your instruction to use ticket numbers as-is, but logging dev time directly to an Epic (rather than a task under it) is unusual; flagging in case that wasn't intentional.
+15. **0.5h rounding top-up on ZOL-6971 (2026-07-17)**: per your instruction, added 0.5h to close the gap between raw Toggl (106.05h) and rounded logged time (105.50h). This breaks the day-level reconciliation for 2026-07-17 specifically (now 10.00h logged vs 9.37h raw that day) — every other day in this report still matches its own raw Toggl total exactly. If you'd rather keep every day exact and just accept the small aggregate rounding delta, tell me and I'll back this out.
 
 ## Next step
 
