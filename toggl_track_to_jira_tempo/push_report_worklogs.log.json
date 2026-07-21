@@ -1,0 +1,884 @@
+{
+  "01f560f9b5fbffbf52d93ca92d25c7b5df3dcfd2cdd1c158963cdad4de0b14e6": {
+    "date": "2026-07-07",
+    "hours": 1.0,
+    "issue_id": "95712",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55112,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "0401bac73a10d6d63c9a090cb99c9bca8b6d36a8236c962a9fc335b168924133": {
+    "date": "2026-07-09",
+    "hours": 6.5,
+    "issue_id": "96906",
+    "notes": "PR #831 opened this day; user-directed 1 full day (evidenced \u2014 untouched by the 2026-07-17 rebalance)",
+    "tempo_worklog_id": 55126,
+    "ticket": "ZOL-7424",
+    "type": "Dev"
+  },
+  "050222104210e3c859d51056f7717854efcbf1ad5aefcc1574fbb871db01b9b9": {
+    "date": "2026-07-13",
+    "hours": 1.5,
+    "issue_id": "58467",
+    "notes": "1-1 + Standup + Team Lead Briefing \u2014 non-project per policy",
+    "tempo_worklog_id": 55132,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "0522a2e36ca4b051bb03f0b9dd437fd396025671d804eed4494020ccdf840098": {
+    "date": "2026-07-17",
+    "hours": 1.0,
+    "issue_id": "97433",
+    "notes": "\"FinOps meeting -- Weekly Follow up meeting\" \u00d72 \u2014 reclassified 2026-07-21 from PENDING-ENG-TICKET now that ZOL-7597 exists",
+    "tempo_worklog_id": 55160,
+    "ticket": "ZOL-7597",
+    "type": "Meeting"
+  },
+  "0739ff28a310e3fb20cf7363a715273b52983f76d7ec5d4e9f3b9399392189e0": {
+    "date": "2026-07-20",
+    "hours": 0.5,
+    "issue_id": "96470",
+    "notes": "Explicitly labeled \"Zol-7287: track fe pulse marker when new activity arrives\"",
+    "tempo_worklog_id": 55162,
+    "ticket": "ZOL-7287",
+    "type": "Dev"
+  },
+  "08e74af0510be3b61804452564d570fbf7a69738f113238dfdad5c88b853b129": {
+    "date": "2026-07-10",
+    "hours": 2.0,
+    "issue_id": "96834",
+    "notes": "Done; story-point share of unattributed dev pool, scaled down 2026-07-17",
+    "tempo_worklog_id": 55130,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "0eae8102e5a5d92388320b6c4c16418c0fc4c5d2b68df6af5a4a56197f0a41f0": {
+    "date": "2026-07-10",
+    "hours": 0.5,
+    "issue_id": "97433",
+    "notes": "Service Catalog review \u2014 reclassified 2026-07-21 from PENDING-ENG-TICKET now that ZOL-7597 exists",
+    "tempo_worklog_id": 55131,
+    "ticket": "ZOL-7597",
+    "type": "Meeting"
+  },
+  "0ee76c5d730378735ab2ff27b5dbe51e96fdc8d64aacc5e8cbd532def045146a": {
+    "date": "2026-07-01",
+    "hours": 0.5,
+    "issue_id": "96834",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55075,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "12a3caf02aa2883d313c638b93221c6170c4613f9736470f3b49bfffd5211b55": {
+    "date": "2026-07-02",
+    "hours": 1.0,
+    "issue_id": "95684",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7424 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55080,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "1439ac078ed607bfbf1e83b18297e3b9d5deda9daaaf06a3a99564bf5fac69d2": {
+    "date": "2026-07-13",
+    "hours": 0.5,
+    "issue_id": "95704",
+    "notes": "Done; story-point share of unattributed dev pool",
+    "tempo_worklog_id": 55136,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "15d483b7fab2d8df23d154fdacc7271bac4202e50e2848c36a3f868f1dede20a": {
+    "date": "2026-07-08",
+    "hours": 4.0,
+    "issue_id": "95661",
+    "notes": "Excess dev time freed from ZOL-7394 this day, moved to ZOL-6930 (parent epic of ZOL-7424/6960/6941; ZOL-7394 itself has no Jira parent, but you confirmed routing its share here)",
+    "tempo_worklog_id": 55118,
+    "ticket": "ZOL-6930",
+    "type": "Dev"
+  },
+  "1782a2725378765db7fb2ab2eacfbe6419981bfa5bff65dbc465200d01cc18c9": {
+    "date": "2026-07-03",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "ZOLEO Detailed EPIC Walkthrough (New Cycle) \u2014 share by story points 2/10",
+    "tempo_worklog_id": 55096,
+    "ticket": "ZOL-7424",
+    "type": "Meeting"
+  },
+  "19d76575d9ad1d675274c2501f7829db65d89e37df756756a16e05adb97344d5": {
+    "date": "2026-07-17",
+    "hours": 1.5,
+    "issue_id": "95712",
+    "notes": "Explicitly labeled \"ZOL-6968: CS RBAC Lazy upsert\"",
+    "tempo_worklog_id": 55157,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "1ecd22ca6df3c60c31d4fd3bd57cc43207c607fc7e52a2d8cdfdf12e48babc0c": {
+    "date": "2026-07-01",
+    "hours": 0.5,
+    "issue_id": "95712",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55074,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "2784134c888d60fb3af7b24e362af14744657bcdd8397f952346e0361a5c7f9d": {
+    "date": "2026-07-03",
+    "hours": 0.5,
+    "issue_id": "96834",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55093,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "28a67be9651db38f06cfed40fb5f2a4dc3ee4e4fe9ee1111084fccadebeee18d": {
+    "date": "2026-07-01",
+    "hours": 1.0,
+    "issue_id": "96906",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55076,
+    "ticket": "ZOL-7424",
+    "type": "Dev"
+  },
+  "297df9bb8c74f928b8f80ccbeab6ff959a6c2a225da697822e005689a291acf6": {
+    "date": "2026-07-03",
+    "hours": 2.0,
+    "issue_id": "95661",
+    "notes": "Excess dev time freed from ZOL-7394 this day (ZOL-7394 has no Jira parent, routed here per your instruction) + excess freed from ZOL-7424 this day (ZOL-6930 is ZOL-7424's actual parent epic)",
+    "tempo_worklog_id": 55088,
+    "ticket": "ZOL-6930",
+    "type": "Dev"
+  },
+  "2ff17de98d5ee20dcb7f00c79ef3f9ecaed427ec30f821776496f7fdf794c847": {
+    "date": "2026-07-16",
+    "hours": 0.5,
+    "issue_id": "74711",
+    "notes": "Half of undescribed time, split across in-progress tickets by story points (1/3)",
+    "tempo_worklog_id": 55148,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "311311d27b4fa5d11e4aa19657272bc0368ab419b8c5a63d9ba22b38d0401e42": {
+    "date": "2026-07-10",
+    "hours": 1.5,
+    "issue_id": "95704",
+    "notes": "Done; story-point share of unattributed dev pool",
+    "tempo_worklog_id": 55129,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "317fef274658c7f3cb2b3add1409ba62dcf521bf0f0139ce572ac6b1a5bf3a69": {
+    "date": "2026-07-07",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "ZOLEO EPIC's Technical Design's Walkthrough \u2014 share by story points 2/10",
+    "tempo_worklog_id": 55117,
+    "ticket": "ZOL-7424",
+    "type": "Meeting"
+  },
+  "370a22985f1af35f52e367afe6dfa69d4a7c2b3972cc7dc6d884ff98739b2f3c": {
+    "date": "2026-07-01",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "Capped per your 8h instruction",
+    "tempo_worklog_id": 55070,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "3acd6205a783193b5004676e52e5cb006a3b0f84080e456fd7c4f74d2848a899": {
+    "date": "2026-07-02",
+    "hours": 0.5,
+    "issue_id": "95704",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder)",
+    "tempo_worklog_id": 55081,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "3ec5bafdb0f622f98eab1d064881f6a3c6fba086ac6f9e9042e388d8bfb33597": {
+    "date": "2026-07-20",
+    "hours": 1.0,
+    "issue_id": "96828",
+    "notes": "Explicitly labeled \"ZOL-7391: feat: add CS account restrictions read and Finance RBAC role\" + half of the undescribed 09:45-10:18 entry, by adjacency",
+    "tempo_worklog_id": 55163,
+    "ticket": "ZOL-7391",
+    "type": "Dev"
+  },
+  "3f03bd7f53594ddb730d1fe781aa6948585cc57e4597c151b0ad167c50b0f152": {
+    "date": "2026-07-13",
+    "hours": 0.5,
+    "issue_id": "95684",
+    "notes": "Done; story-point share of unattributed dev pool",
+    "tempo_worklog_id": 55135,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "3f86ea96cc6ed769c8aa08f3768a59ef63d3d42bbe666988a401157759f4f8cb": {
+    "date": "2026-07-17",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "Share of catch-all entry \"Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work\" (Zoleo Track work quarter, evenly split, no weights given)",
+    "tempo_worklog_id": 55153,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "3fd39fd2a7da97ba788c52be4af4d9dd30a4fc0bf8e989c55ea6a68d9097f3e4": {
+    "date": "2026-07-07",
+    "hours": 0.5,
+    "issue_id": "95320",
+    "notes": "Excess dev time freed from ZOL-6968 this day, moved to ZOL-6775 (its real parent epic) \u2014 per your 2026-07-17 instruction",
+    "tempo_worklog_id": 55109,
+    "ticket": "ZOL-6775",
+    "type": "Dev"
+  },
+  "4048871aa5753aaccc2290d4413755301bcfb7d345c16d176ca341232368cb02": {
+    "date": "2026-07-02",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "ZOLEO Detailed EPIC Walkthrough (New Cycle) \u2014 share by story points 2/10",
+    "tempo_worklog_id": 55085,
+    "ticket": "ZOL-7424",
+    "type": "Meeting"
+  },
+  "40e7dcf143306bc74e9b00a13da0cf3749a06965708e323d8814428184d5b385": {
+    "date": "2026-07-14",
+    "hours": 5.5,
+    "issue_id": "95704",
+    "notes": "Done; story-point share of unattributed dev pool + excess dev time freed from ZOL-7394 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55140,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "410b35e9c0add015fa61d2cf9515399fe07d60bdb749eff8374cac401d0b165a": {
+    "date": "2026-07-07",
+    "hours": 0.5,
+    "issue_id": "95712",
+    "notes": "ZOLEO EPIC's Technical Design's Walkthrough \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55113,
+    "ticket": "ZOL-6968",
+    "type": "Meeting"
+  },
+  "45c099d390367fea9341dd7793fc6e9496c5e442a5ebc154a2af492bfbe5085a": {
+    "date": "2026-07-06",
+    "hours": 1.5,
+    "issue_id": "95704",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7394 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55103,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "471e1222c00e4f7bacdefe769031bb409980bab62eee7175dff77616feaffe51": {
+    "date": "2026-07-01",
+    "hours": 1.5,
+    "issue_id": "95684",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7394 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55072,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "4800bae9d8ec8c6957d95b08efad2ef759df8aa175b59dfeaeec5db102140e58": {
+    "date": "2026-07-03",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55095,
+    "ticket": "ZOL-7424",
+    "type": "Dev"
+  },
+  "4a130b8e6396060d94baa34d8c17d36bc83289b935b7fa86f70e09842122919f": {
+    "date": "2026-07-17",
+    "hours": 1.0,
+    "issue_id": "95320",
+    "notes": "Share of catch-all entry \"Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work\" (RBAC Epic quarter, evenly split, no weights given)",
+    "tempo_worklog_id": 55155,
+    "ticket": "ZOL-6775",
+    "type": "Dev"
+  },
+  "4a4974d6ddf1b268a5c8bf67a9657b6581ef2f7cb19d553b45fe3d5d3ddf45d0": {
+    "date": "2026-07-08",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "ZOLEO Story and Sprint Planning Session \u2014 share by story points 2/10",
+    "tempo_worklog_id": 55124,
+    "ticket": "ZOL-7424",
+    "type": "Meeting"
+  },
+  "4c42e0ae2801d3510510a94f2147bb653a4cd6621dcfda2fc4a862b2b767ad87": {
+    "date": "2026-07-17",
+    "hours": 1.0,
+    "issue_id": "95661",
+    "notes": "Share of catch-all entry \"Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work\" (EIS Cache Epic quarter \u2014 ZOL-6930 is the real epic housing both the EIP-cache work and the EIS/EngageIP-indexing spike; evenly split, no weights given)",
+    "tempo_worklog_id": 55156,
+    "ticket": "ZOL-6930",
+    "type": "Dev"
+  },
+  "4f41dc1ce3e9ad01bd59fb0403ed424e2a2b085b2e15dbdc676e43e63fadf253": {
+    "date": "2026-07-07",
+    "hours": 1.5,
+    "issue_id": "95684",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7394 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55110,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "5996a20daa8ddd30017f3e621beebc00a1db982145dd53e8af8f575e7d1d62dc": {
+    "date": "2026-07-17",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "\"Track discussion meeting\" \u2014 topic matches ZOL-5836 (Track/production release), same classification used for other Track meetings in this report",
+    "tempo_worklog_id": 55154,
+    "ticket": "ZOL-5836",
+    "type": "Meeting"
+  },
+  "5bdd6329ea9fac5342e6bbea536466f1de7a3754e6d6baaea01f4b5e86b223e9": {
+    "date": "2026-07-13",
+    "hours": 0.5,
+    "issue_id": "74711",
+    "notes": "MyZOLEO testing / launch plan \u2014 topic matches ZOL-5836 production-release tracking",
+    "tempo_worklog_id": 55133,
+    "ticket": "ZOL-5836",
+    "type": "Meeting"
+  },
+  "5de41485dd19de63e076c8e4c14888edfc7582227f363af753a41efda931c034": {
+    "date": "2026-07-14",
+    "hours": 1.0,
+    "issue_id": "96834",
+    "notes": "Done; story-point share of unattributed dev pool, scaled down 2026-07-17",
+    "tempo_worklog_id": 55141,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "64236170184598cdab4f52a52336bc16258222e8bad9f2bdaa1a3ec4a05b73f9": {
+    "date": "2026-07-02",
+    "hours": 1.0,
+    "issue_id": "95712",
+    "notes": "ZOLEO Detailed EPIC Walkthrough (New Cycle) \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55083,
+    "ticket": "ZOL-6968",
+    "type": "Meeting"
+  },
+  "696fdd41b1c8837a93c6d719f8651a197fb5f065a18488fd6785838cd00e2fc5": {
+    "date": "2026-07-20",
+    "hours": 3.0,
+    "issue_id": "58467",
+    "notes": "Explicitly labeled \"TL Activities: Planning demo\" + \"Standup\" + \"1-1\" + undescribed 06:26-07:04 entry, attributed to the same TL prep session by adjacency",
+    "tempo_worklog_id": 55161,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "6a9a889a5ffed86c499fd293d55fbdf731ce2087e9086e4661271d797019ce46": {
+    "date": "2026-07-03",
+    "hours": 0.5,
+    "issue_id": "95704",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder)",
+    "tempo_worklog_id": 55090,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "6c27c931e9dc37264de5b0a5ead28796007f552b068aeb87c050382bac788a0c": {
+    "date": "2026-07-20",
+    "hours": 1.0,
+    "issue_id": "97447",
+    "notes": "1.00h moved from ZOL-7603 per your instruction \u2014 no direct Toggl evidence for tagging-policy work specifically, this is a manual reallocation within the ZOL-7597 epic",
+    "tempo_worklog_id": 55166,
+    "ticket": "ZOL-7602",
+    "type": "Dev"
+  },
+  "6e9d98e43c67b17612e6d7b1f46d3520f2dfe1ef1c2a05d4feed9363a85e1e43": {
+    "date": "2026-07-06",
+    "hours": 1.0,
+    "issue_id": "95712",
+    "notes": "ZOLEO EPIC's Technical Design's Walkthrough \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55105,
+    "ticket": "ZOL-6968",
+    "type": "Meeting"
+  },
+  "70b12adc006d3058e4533ef7b281916ac69614d495956c3509852a38752e30d4": {
+    "date": "2026-07-15",
+    "hours": 1.5,
+    "issue_id": "95704",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7394 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55145,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "76d63499ed8b17d0b6de343dfaee0dd88ba09494bca5496f395dcf2d33a5e7ba": {
+    "date": "2026-07-02",
+    "hours": 0.5,
+    "issue_id": "95320",
+    "notes": "Excess dev time freed from ZOL-6968 this day, moved to ZOL-6775 (its real parent epic) \u2014 per your 2026-07-17 instruction",
+    "tempo_worklog_id": 55078,
+    "ticket": "ZOL-6775",
+    "type": "Dev"
+  },
+  "78a453a33d3ae4710a5552f884eec5aa34cf5fc46eb17c76d6bbf1f7b1f337d1": {
+    "date": "2026-07-16",
+    "hours": 1.0,
+    "issue_id": "95712",
+    "notes": "Explicitly labeled \"ZOL-6968: Zoleo Track URL updates\"",
+    "tempo_worklog_id": 55150,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "7e827a87bf9b082f785ee9e96f2cfa06c953ba4966c89e75a1ff8d87df83be1c": {
+    "date": "2026-07-17",
+    "hours": 0.5,
+    "issue_id": "97272",
+    "notes": "Explicitly labeled \"ZOL-7534: Region based billing -- Meeting\"",
+    "tempo_worklog_id": 55159,
+    "ticket": "ZOL-7534",
+    "type": "Meeting"
+  },
+  "839fafed2a82b68b305582e79d364ffb0c506595ea199e1fc8bb3efa50d393e2": {
+    "date": "2026-07-06",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "ZOLEO EPIC's Technical Design's Walkthrough \u2014 share by story points 2/10",
+    "tempo_worklog_id": 55107,
+    "ticket": "ZOL-7424",
+    "type": "Meeting"
+  },
+  "8779d58466e3bf2e69d22070a19f4f90d0cb1ecc6f923b7c9097db3b4807aee0": {
+    "date": "2026-07-16",
+    "hours": 4.0,
+    "issue_id": "58467",
+    "notes": "\"Team lead stuff. reviewing tickets etc\" + Standup + KT Meeting with product + half of undescribed time",
+    "tempo_worklog_id": 55147,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "88940b794537a91ba48049215c6b67e1641edda220d11f9c8faf9eb2ed95fe20": {
+    "date": "2026-07-07",
+    "hours": 0.5,
+    "issue_id": "96834",
+    "notes": "ZOLEO EPIC's Technical Design's Walkthrough \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55115,
+    "ticket": "ZOL-7394",
+    "type": "Meeting"
+  },
+  "8b1ea4d36cb625430854b1d322693f57312a8861f19fd2fe9f0e75023aa33ef6": {
+    "date": "2026-07-13",
+    "hours": 1.0,
+    "issue_id": "95661",
+    "notes": "Excess dev time freed from ZOL-7394 this day, moved to ZOL-6930 (parent epic of ZOL-7424/6960/6941; ZOL-7394 itself has no Jira parent, but you confirmed routing its share here)",
+    "tempo_worklog_id": 55134,
+    "ticket": "ZOL-6930",
+    "type": "Dev"
+  },
+  "8b84d1d555ce4488cba167b67919322587a6c05390b81ee57ce03719785dda84": {
+    "date": "2026-07-07",
+    "hours": 1.0,
+    "issue_id": "95704",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7424 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55111,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "8d13457cfd0a337fd30e7fdc9b9cb11fe174a50e4c0d5135ccdbfa9ea4bb153e": {
+    "date": "2026-07-06",
+    "hours": 0.5,
+    "issue_id": "95712",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55104,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "8e560cd04917d1b1cedfbdec9bdf4ba2519494c636a8a3c5d2d5ddf2146974b7": {
+    "date": "2026-07-06",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "Capped per your 8h instruction",
+    "tempo_worklog_id": 55099,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "9164529c53ef45f32e0613aa479255c52263cf11a746de5be9e6841af68d7f42": {
+    "date": "2026-07-15",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "Capped per your 8h instruction",
+    "tempo_worklog_id": 55143,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "950270846a6b2d4f451f4bb13d01acc984a03815f467dbb63fef524dfcec55f6": {
+    "date": "2026-07-02",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "Capped per your 8h instruction",
+    "tempo_worklog_id": 55077,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "958870d38e6c1be2386910c4ae2d2fb7e2976572b0bafd7d75a1c4ded765e536": {
+    "date": "2026-07-02",
+    "hours": 1.0,
+    "issue_id": "95661",
+    "notes": "Excess dev time freed from ZOL-7394 this day, moved to ZOL-6930 (parent epic of ZOL-7424/6960/6941; ZOL-7394 itself has no Jira parent, but you confirmed routing its share here)",
+    "tempo_worklog_id": 55079,
+    "ticket": "ZOL-6930",
+    "type": "Dev"
+  },
+  "96762d188d6550cbc15f30618535acec99ea194656ae2c07e94625d20b7d36de": {
+    "date": "2026-07-06",
+    "hours": 0.5,
+    "issue_id": "95320",
+    "notes": "Excess dev time freed from ZOL-6968 this day, moved to ZOL-6775 (its real parent epic) \u2014 per your 2026-07-17 instruction",
+    "tempo_worklog_id": 55100,
+    "ticket": "ZOL-6775",
+    "type": "Dev"
+  },
+  "996e0ed912bab34be3e105af005e9264692048d49ca90833d4a3ee4f54ac66d3": {
+    "date": "2026-07-14",
+    "hours": 1.5,
+    "issue_id": "95684",
+    "notes": "Done; story-point share of unattributed dev pool",
+    "tempo_worklog_id": 55139,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "9ab8f41a2ec03a13c5acebd5ad1dc81d66425d9569f0820a8cf5979aaff40465": {
+    "date": "2026-07-16",
+    "hours": 1.0,
+    "issue_id": "96906",
+    "notes": "Half of undescribed time, split across in-progress tickets by story points (2/3)",
+    "tempo_worklog_id": 55151,
+    "ticket": "ZOL-7424",
+    "type": "Dev"
+  },
+  "9b786b38dc829e6895a3f665e8c554190bbad1815da5c431413aa5299a29abfb": {
+    "date": "2026-07-20",
+    "hours": 1.0,
+    "issue_id": "97433",
+    "notes": "Explicitly labeled \"ZOL-7597: FinOps Epic -- FinOps report\" \u00d72",
+    "tempo_worklog_id": 55165,
+    "ticket": "ZOL-7597",
+    "type": "Dev"
+  },
+  "9b8923b716b6892ff31f1e18b5c10911f06621c597b11bcdb2deb91caa8be103": {
+    "date": "2026-07-03",
+    "hours": 0.5,
+    "issue_id": "95320",
+    "notes": "Excess dev time freed from ZOL-6968 this day, moved to ZOL-6775 (its real parent epic) \u2014 per your 2026-07-17 instruction",
+    "tempo_worklog_id": 55087,
+    "ticket": "ZOL-6775",
+    "type": "Dev"
+  },
+  "9bbc2804c458206230bde194f510f15741019ea6c6c3eb030cabd97ea262de83": {
+    "date": "2026-07-10",
+    "hours": 0.5,
+    "issue_id": "58467",
+    "notes": "Standup \u2014 non-project per policy",
+    "tempo_worklog_id": 55127,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "a0a9dad993aee65490ce473e55ac772d45193254e99c83c0342dfab0b05dfab4": {
+    "date": "2026-07-15",
+    "hours": 5.0,
+    "issue_id": "95712",
+    "notes": "PR #855 opened this day (half-day, user-directed, 4.5h protected) + 0.5h of that day's ZOL-5836-redistribution placeholder, which rounded back to its original amount after scaling (no net change)",
+    "tempo_worklog_id": 55146,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "a0fc2799dc346807ab3a8f5d5e9093ee11079be3e0fda5a0ab392dd6c691dac1": {
+    "date": "2026-07-03",
+    "hours": 0.5,
+    "issue_id": "95684",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder)",
+    "tempo_worklog_id": 55089,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "a2f046aea5bf0ee7a067f415bad0bcb7aede2bb47705a2d86283f1dd579b7dcf": {
+    "date": "2026-07-01",
+    "hours": 0.5,
+    "issue_id": "95704",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder)",
+    "tempo_worklog_id": 55073,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "af26d6338c993a3fa87e40c7c0cdcdbea32d5e64e65c3684f0c533438304abd2": {
+    "date": "2026-07-20",
+    "hours": 1.5,
+    "issue_id": "97449",
+    "notes": "Explicitly labeled \"ZOL-7603: FinOps - Metabase deployment\" + half of the undescribed 09:45-10:18 entry + the undescribed 11:45-12:30 entry, both by adjacency to the Metabase work \u2014 reduced by 1.00h per your instruction, moved to ZOL-7602",
+    "tempo_worklog_id": 55167,
+    "ticket": "ZOL-7603",
+    "type": "Dev"
+  },
+  "b16da38827b0a3ae60c6f3393ec2df81f45f208de4995a017a8f4bf1fb179ed0": {
+    "date": "2026-07-15",
+    "hours": 0.5,
+    "issue_id": "58467",
+    "notes": "Standup \u2014 non-project per policy",
+    "tempo_worklog_id": 55142,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "b3598ecc713e44e6072dd6307842c390b1f6bf5c62ef48e65ff36529f6cb3cc1": {
+    "date": "2026-07-20",
+    "hours": 1.0,
+    "issue_id": "97433",
+    "notes": "Explicitly labeled \"ZOL-7597: FinOps Epic - FinOps meeting -- Service Catalog filling\" \u00d72",
+    "tempo_worklog_id": 55164,
+    "ticket": "ZOL-7597",
+    "type": "Meeting"
+  },
+  "b424c6fea03a6b34359b7277bad0cc5570d9b3e4d3780d6d31c718991e2a9127": {
+    "date": "2026-07-02",
+    "hours": 0.5,
+    "issue_id": "95712",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55082,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "b9eb177f24ddba450c9e4fc709b1f3ec77270569f5b936f13728667273dbda68": {
+    "date": "2026-07-15",
+    "hours": 1.0,
+    "issue_id": "95684",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder) + excess dev time freed from ZOL-7424 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55144,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "bad7ec4272f11f53c023ab4859b91349432482e733b10347c1adff9b9c1a29d6": {
+    "date": "2026-07-13",
+    "hours": 0.5,
+    "issue_id": "96834",
+    "notes": "Done; story-point share of unattributed dev pool, scaled down 2026-07-17",
+    "tempo_worklog_id": 55137,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "bb7239a4948381fc51fd075e67f7fe062e5cb1704c74b49da59339ce0d589edb": {
+    "date": "2026-07-08",
+    "hours": 0.5,
+    "issue_id": "96834",
+    "notes": "ZOLEO Story and Sprint Planning Session \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55123,
+    "ticket": "ZOL-7394",
+    "type": "Meeting"
+  },
+  "bdbccd32c9a123986d9b49951c0222914a1573383f5c5f4fca9f9e61179a9f92": {
+    "date": "2026-07-07",
+    "hours": 0.5,
+    "issue_id": "96906",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55116,
+    "ticket": "ZOL-7424",
+    "type": "Dev"
+  },
+  "c67766cdd8cebeb2ebfaece5c5023b742d22aa0ef75bcd2b9d808eb370191800": {
+    "date": "2026-07-14",
+    "hours": 0.5,
+    "issue_id": "58467",
+    "notes": "Standup \u2014 non-project per policy",
+    "tempo_worklog_id": 55138,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "c78e1761c72ed68d795e7fd8f1c90336c8f23efd24668340ba9e312668393444": {
+    "date": "2026-07-16",
+    "hours": 1.0,
+    "issue_id": "74711",
+    "notes": "\"Pricing plan and track deployment walkthrough\" + \"track - launch go or no go meeting\" \u2014 both topic-match ZOL-5836",
+    "tempo_worklog_id": 55149,
+    "ticket": "ZOL-5836",
+    "type": "Meeting"
+  },
+  "c86c51788fedd93519e505940b72f530e49fb9bc9350a3e4fae63dcfb96eb218": {
+    "date": "2026-07-17",
+    "hours": 1.5,
+    "issue_id": "95721",
+    "notes": "Explicitly labeled \"ZOL-6971: Track Launch Epic\" (1.00h) + 0.5h rounding top-up per your instruction \u2014 not evidence, just closing the raw-vs-logged gap on the ticket with the least hours logged",
+    "tempo_worklog_id": 55158,
+    "ticket": "ZOL-6971",
+    "type": "Dev"
+  },
+  "cd3640ac9af0d63f794076a03f9a2f900a0741d3a6f89af5dae19d8f592d11f0": {
+    "date": "2026-07-03",
+    "hours": 1.0,
+    "issue_id": "95712",
+    "notes": "ZOLEO Detailed EPIC Walkthrough (New Cycle) \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55092,
+    "ticket": "ZOL-6968",
+    "type": "Meeting"
+  },
+  "cdbd98891e408fab45c68bb784a1975b28e21d486aa37c9427bc10ff3d713b83": {
+    "date": "2026-07-09",
+    "hours": 1.0,
+    "issue_id": "58467",
+    "notes": "Touchpoint + Standup \u2014 non-project per policy",
+    "tempo_worklog_id": 55125,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "d0f8df3e38a1583fc96dab1aabe880abf9c80d93e8b4c8eac9bc852a0e171953": {
+    "date": "2026-07-06",
+    "hours": 0.5,
+    "issue_id": "95684",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder)",
+    "tempo_worklog_id": 55102,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "d3229532833a14b24f3b9d8023dec7fea7ffc28e4be2e89bdad1e7260d6c90e6": {
+    "date": "2026-07-08",
+    "hours": 1.0,
+    "issue_id": "96834",
+    "notes": "Done; story-point share of unattributed dev pool, scaled down 2026-07-17",
+    "tempo_worklog_id": 55122,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "d57fdb032908b6ccfc10d58b645bbdbcffed153cf8418c813e75cede9d508db7": {
+    "date": "2026-07-07",
+    "hours": 2.0,
+    "issue_id": "74711",
+    "notes": "Capped per your 8h instruction",
+    "tempo_worklog_id": 55108,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "d6f1b95bbaefc48441b5e7dd51ca5ec41ba3a8a6b56ea63ae09ba87f20bf2056": {
+    "date": "2026-07-17",
+    "hours": 1.5,
+    "issue_id": "58467",
+    "notes": "Share of catch-all entry \"Zoleo Track work + RBAC Epic + EIS Cache Epic + Team Leading work\" (Team Leading quarter, evenly split, no weights given) + explicitly labeled \"ZOL-4295: Misc. Meeting -- Standup\"",
+    "tempo_worklog_id": 55152,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "dd6a76ac3d69ebb19310eb0b5eabffe2793a5923c1a8bf30ff7529fb63d5bce6": {
+    "date": "2026-07-08",
+    "hours": 0.5,
+    "issue_id": "95712",
+    "notes": "ZOLEO Story and Sprint Planning Session \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55121,
+    "ticket": "ZOL-6968",
+    "type": "Meeting"
+  },
+  "dec332fed659cbb85e9e8af106be0eb14244e57131ae8077feb0c1d537d6add0": {
+    "date": "2026-07-08",
+    "hours": 1.5,
+    "issue_id": "95684",
+    "notes": "Done; story-point share of unattributed dev pool",
+    "tempo_worklog_id": 55119,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "e29414f369c4c354f7c0bb01cd3a5934d94564a59910794eeb60174e4b9aa81f": {
+    "date": "2026-07-07",
+    "hours": 0.5,
+    "issue_id": "96834",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55114,
+    "ticket": "ZOL-7394",
+    "type": "Dev"
+  },
+  "e672ad9e37dcadaacd01ed0d47eb3dcb6c9e7b92aee8de19acf01a21fcd3995f": {
+    "date": "2026-07-10",
+    "hours": 5.0,
+    "issue_id": "95684",
+    "notes": "Done; story-point share of unattributed dev pool + excess dev time freed from ZOL-7394 this day, moved here instead of the parent epic (within 25h cap)",
+    "tempo_worklog_id": 55128,
+    "ticket": "ZOL-6941",
+    "type": "Dev"
+  },
+  "e7552ae3ca5857ef118f6fff6b79800b3a54efdc7cd2e0a276937eb3b6b09fdd": {
+    "date": "2026-07-06",
+    "hours": 0.5,
+    "issue_id": "58467",
+    "notes": "Generic team ceremony (1-1) \u2014 non-project per policy",
+    "tempo_worklog_id": 55098,
+    "ticket": "ZOL-4295",
+    "type": "Non-project"
+  },
+  "e75b29cec53351f34f6fca9441b9f0de5f4fa0fdeef5812f69863e2e86496324": {
+    "date": "2026-07-03",
+    "hours": 1.0,
+    "issue_id": "95712",
+    "notes": "Redistributed share of ZOL-5836 reduction (story-point split, best-judgement placeholder), scaled down 2026-07-17",
+    "tempo_worklog_id": 55091,
+    "ticket": "ZOL-6968",
+    "type": "Dev"
+  },
+  "e87fb9eb015c0c1ee7b49a10fb8154e0de4e534286f2e103e13f8050736291c3": {
+    "date": "2026-07-08",
+    "hours": 1.5,
+    "issue_id": "95704",
+    "notes": "Done; story-point share of unattributed dev pool",
+    "tempo_worklog_id": 55120,
+    "ticket": "ZOL-6960",
+    "type": "Dev"
+  },
+  "ec62af0e5fe71f624de2dcbc8a63b538b803ab9f2637d149ed05f1c279a47f7b": {
+    "date": "2026-07-06",
+    "hours": 0.5,
+    "issue_id": "95661",
+    "notes": "Excess dev time freed from ZOL-7424 this day, moved to ZOL-6930 (ZOL-7424's actual parent epic)",
+    "tempo_worklog_id": 55101,
+    "ticket": "ZOL-6930",
+    "type": "Dev"
+  },
+  "ee687f926456adfa8f06b006dc62f1dc1e77a036e5285c0bf44d73f5062462be": {
+    "date": "2026-07-06",
+    "hours": 1.0,
+    "issue_id": "96834",
+    "notes": "ZOLEO EPIC's Technical Design's Walkthrough \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55106,
+    "ticket": "ZOL-7394",
+    "type": "Meeting"
+  },
+  "f281f0c301389b27c6e93ebd9d12a7d871b770cf16de9d831f1940c71721ff61": {
+    "date": "2026-07-03",
+    "hours": 1.0,
+    "issue_id": "97433",
+    "notes": "Eng Initiatives Sync - FinOps + EngOps \u2014 reclassified 2026-07-21 from PENDING-ENG-TICKET now that ZOL-7597 exists",
+    "tempo_worklog_id": 55097,
+    "ticket": "ZOL-7597",
+    "type": "Meeting"
+  },
+  "f70a258f77b390c771bdbbf78d6c4fdc28163f219634c4b289e5f47cb2666f2e": {
+    "date": "2026-07-01",
+    "hours": 1.0,
+    "issue_id": "95320",
+    "notes": "Excess dev time freed from ZOL-6968 this day, moved to ZOL-6775 (its real parent epic) \u2014 per your 2026-07-17 instruction",
+    "tempo_worklog_id": 55071,
+    "ticket": "ZOL-6775",
+    "type": "Dev"
+  },
+  "f7ba48c46bb9988d4059399fabfe849e8889c78866c29722b3a904b29584f5de": {
+    "date": "2026-07-03",
+    "hours": 2.0,
+    "issue_id": "74711",
+    "notes": "Capped per your 8h instruction",
+    "tempo_worklog_id": 55086,
+    "ticket": "ZOL-5836",
+    "type": "Dev"
+  },
+  "faa2f83775e9e318fdd9c60fce3391ab5e9cafd7614974d7ee50587d73c7be27": {
+    "date": "2026-07-03",
+    "hours": 1.0,
+    "issue_id": "96834",
+    "notes": "ZOLEO Detailed EPIC Walkthrough (New Cycle) \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55094,
+    "ticket": "ZOL-7394",
+    "type": "Meeting"
+  },
+  "fc906b70d5234ed07a0a1cf2e3e2b3f26225d692090dd729ff48650857207bae": {
+    "date": "2026-07-02",
+    "hours": 1.0,
+    "issue_id": "96834",
+    "notes": "ZOLEO Detailed EPIC Walkthrough (New Cycle) \u2014 share by story points 3/10",
+    "tempo_worklog_id": 55084,
+    "ticket": "ZOL-7394",
+    "type": "Meeting"
+  }
+}
