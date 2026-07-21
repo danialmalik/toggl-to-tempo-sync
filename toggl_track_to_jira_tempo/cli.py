@@ -107,6 +107,8 @@ def main():
     sync_parser = subparsers.add_parser("sync", help="Sync Toggl entries to Tempo")
     sync_parser.add_argument("start_date", nargs="?", help="Start date (YYYY-MM-DD)")
     sync_parser.add_argument("end_date", nargs="?", help="End date (YYYY-MM-DD)")
+    sync_parser.add_argument("--round-seconds", type=int, default=60, help="Round each entry's duration to this many seconds (default: 60)")
+    sync_parser.add_argument("--residual-ticket", default=None, help="JIRA issue key to receive rounding residual worklogs (skip interactive prompt)")
 
     # Get-summary command
     summary_parser = subparsers.add_parser("get-summary", help="Generate time tracking summary")
@@ -130,7 +132,7 @@ def main():
             sync_args.append(args.start_date)
         if args.end_date:
             sync_args.append(args.end_date)
-        sync(*sync_args)
+        sync(*sync_args, round_seconds=args.round_seconds, residual_ticket=args.residual_ticket)
 
     elif args.command == "get-summary":
         get_summary(*args.args)
