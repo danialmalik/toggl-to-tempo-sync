@@ -67,6 +67,9 @@ def test_integration():
             # Mock Tempo API response
             mock_tempo = MockTempoAPI.return_value
             mock_tempo.add_worklog.return_value = {"tempoWorklogId": "tempo-123"}
+            # Reconciliation queries Tempo for the day's logged total; cover raw (5400s) so no residual is prompted.
+            from utils import HoursLog
+            mock_tempo.get_worklogs_for_user.return_value = [HoursLog("2025-01-15", 1.5)]
 
             # Import and run the sync function
             from sync import sync
@@ -98,6 +101,8 @@ def test_integration():
 
             # Reset the tempo API mock to verify no new calls are made
             mock_tempo.add_worklog.reset_mock()
+            # Tempo still reports the day as fully covered, so no residual should be prompted.
+            mock_tempo.get_worklogs_for_user.return_value = [HoursLog("2025-01-15", 1.5)]
 
             print("✓ Running second sync (should skip all entries)...")
 

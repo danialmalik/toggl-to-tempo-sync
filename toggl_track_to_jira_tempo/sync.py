@@ -89,11 +89,10 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
         entry["raw_duration"] = entry["duration"]
         entry["duration"] = round(entry["duration"] / round_seconds) * round_seconds
 
-    # Per-day raw vs logged totals, used to recover time lost to rounding.
-    # Tracked for synced AND already-synced entries so the deficit check still
-    # runs when every entry was processed in a prior run.
+    # Per-day raw totals (worked time from Toggl) and candidate tickets, used to
+    # recover time lost to rounding. Logged time is taken from Tempo directly at
+    # reconciliation time, so we don't track a local logged total.
     day_raw_totals = defaultdict(int)
-    day_logged_totals = defaultdict(int)
     day_candidate_keys = defaultdict(list)
     issue_summary_cache = {}
 
@@ -145,9 +144,9 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
             duration=original_duration,
             start_date=original_entry_date_str
         ):
-            # Already logged in a prior run; its rounded duration was logged then.
+            # Already logged in a prior run; its rounded duration is in Tempo.
+            # We still count the raw time so the deficit check (vs Tempo) runs.
             day_raw_totals[entry_date_str] += raw_duration
-            day_logged_totals[entry_date_str] += original_duration
             day_candidate_keys[entry_date_str].append(original_issue_key)
             progress.show_entry_skipped(issue_key)
             continue
@@ -214,9 +213,8 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
                     }
                 )
 
-                # Account logged time for day-level residual reconciliation.
+                # Raw time feeds the day-level deficit check vs Tempo.
                 day_raw_totals[entry_date_str] += raw_duration
-                day_logged_totals[entry_date_str] += duration
                 day_candidate_keys[entry_date_str].append(issue_key)
 
                 progress.show_entry_success()
@@ -270,16 +268,33 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
                     wait_for_enter("Waiting for confirmation before retrying...")
                     continue
 
-    # Day-level residual reconciliation: recover time lost to rounding so the
-    # total logged for a day matches the raw total. Runs even when every entry
-    # was already synced, since those still contribute to the day's deficit.
+    # Day-level residual reconciliation. Tempo is the source of truth for logged
+    # time: querying it detects prior residuals, manual entries, or deleted
+    # worklogs that local bookkeeping can't see. Runs even when every entry was
+    # already synced.
+    tempo_by_day = defaultdict(int)
+    if day_raw_totals:
+        with create_api_loader("Fetching Tempo worklogs for reconciliation") as loader:
+            worklogs = jira_tempo_api.get_worklogs_for_user(
+                user_id=JIRA_TEMPO_ACCOUNT_ID,
+                start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
+                end_date=datetime.datetime.strptime(end_date or start_date, "%Y-%m-%d"),
+            )
+        for wl in worklogs:
+            tempo_by_day[str(wl.date)] += int(round(wl.hours * 3600))
+
     for day in sorted(day_raw_totals):
-        deficit = day_raw_totals[day] - day_logged_totals[day]
+        deficit = day_raw_totals[day] - tempo_by_day.get(day, 0)
         if deficit <= 0:
             if deficit < 0:
                 Logger.log_info(Logger.format_message(
-                    f"{day}: over-reported {seconds_to_human_readable(-deficit)} due to rounding (no action taken).",
+                    f"{day}: Tempo already has {seconds_to_human_readable(-deficit)} more than raw (no residual needed).",
                     Logger.WARNING,
+                ))
+            else:
+                Logger.log_info(Logger.format_message(
+                    f"{day}: Tempo total matches raw total (no residual needed).",
+                    Logger.INFO_SECONDARY,
                 ))
             continue
 

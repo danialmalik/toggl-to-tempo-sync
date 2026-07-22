@@ -69,6 +69,9 @@ def test_animated_sync_integration():
             # Mock Tempo API
             mock_tempo = MockTempoAPI.return_value
             mock_tempo.add_worklog.return_value = {"tempoWorklogId": "tempo-123"}
+            # Reconciliation queries Tempo for the day's logged total; cover raw (5400s) so no residual is prompted.
+            from utils import HoursLog
+            mock_tempo.get_worklogs_for_user.return_value = [HoursLog("2025-08-25", 1.5)]
 
             # Import and run sync with mocked input
             from sync import sync
