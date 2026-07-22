@@ -1,4 +1,5 @@
 import os
+import math
 import datetime
 from collections import defaultdict
 from typing import Optional
@@ -51,7 +52,7 @@ def input_or_default(prompt: str, default: str):
     value = input(f"{prompt} [{default_formatted}]: ")
     return value or default
 
-def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 60, residual_ticket: Optional[str] = None):
+def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1800, residual_ticket: Optional[str] = None):
     """
     Sync Toggl time entries to Jira Tempo.
 
@@ -89,9 +90,12 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
         entry["duration"] = round(entry["duration"] / round_seconds) * round_seconds
 
     # Per-day raw vs logged totals, used to recover time lost to rounding.
+    # Tracked for synced AND already-synced entries so the deficit check still
+    # runs when every entry was processed in a prior run.
     day_raw_totals = defaultdict(int)
     day_logged_totals = defaultdict(int)
-    day_synced_keys = defaultdict(list)
+    day_candidate_keys = defaultdict(list)
+    issue_summary_cache = {}
 
     total_entries = len(entries)
 
@@ -122,8 +126,9 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
         # Entries that round to 0 (e.g. <half the rounding window) aren't logged
         # individually; their raw time is recovered via the day-level residual.
         if duration == 0:
-            progress.show_entry_user_skipped("rounded to 0; recovered as residual")
             day_raw_totals[entry_date_str] += raw_duration
+            day_candidate_keys[entry_date_str].append(original_issue_key)
+            progress.show_entry_user_skipped("rounded to 0; recovered as residual")
             continue
 
         # Show entry processing start
@@ -140,6 +145,10 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
             duration=original_duration,
             start_date=original_entry_date_str
         ):
+            # Already logged in a prior run; its rounded duration was logged then.
+            day_raw_totals[entry_date_str] += raw_duration
+            day_logged_totals[entry_date_str] += original_duration
+            day_candidate_keys[entry_date_str].append(original_issue_key)
             progress.show_entry_skipped(issue_key)
             continue
 
@@ -150,6 +159,7 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
                     issue_details = jira_api.get_issue_details(issue_key)
                     issue_id = issue_details["id"]
                     issue_summary = issue_details.get("fields", {}).get("summary", "")
+                issue_summary_cache[issue_key] = issue_summary
 
                 progress.show_api_activity(f"Issue: {issue_summary}")
 
@@ -207,7 +217,7 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
                 # Account logged time for day-level residual reconciliation.
                 day_raw_totals[entry_date_str] += raw_duration
                 day_logged_totals[entry_date_str] += duration
-                day_synced_keys[entry_date_str].append(issue_key)
+                day_candidate_keys[entry_date_str].append(issue_key)
 
                 progress.show_entry_success()
                 break
@@ -260,8 +270,9 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
                     wait_for_enter("Waiting for confirmation before retrying...")
                     continue
 
-    # Day-level residual reconciliation: recover any time lost to rounding so
-    # the total logged for a day matches the raw total (no net loss/overage).
+    # Day-level residual reconciliation: recover time lost to rounding so the
+    # total logged for a day matches the raw total. Runs even when every entry
+    # was already synced, since those still contribute to the day's deficit.
     for day in sorted(day_raw_totals):
         deficit = day_raw_totals[day] - day_logged_totals[day]
         if deficit <= 0:
@@ -272,33 +283,53 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 6
                 ))
             continue
 
+        # Residual is rounded UP to the rounding window (may over-report by < window).
+        rounded_residual = math.ceil(deficit / round_seconds) * round_seconds
         deficit_formatted = seconds_to_human_readable(deficit)
+        residual_formatted = seconds_to_human_readable(rounded_residual)
+
         Logger.log_info(Logger.format_message(
-            f"{day}: {deficit_formatted} lost to rounding; recovering as a residual worklog.",
+            f"{day}: {deficit_formatted} lost to rounding; rounds up to {residual_formatted} for the residual worklog.",
             Logger.INFO,
         ))
 
+        if input_choice(f"Log {residual_formatted} residual for {day}?", ["Log residual", "Skip"]) == "Skip":
+            continue
+
         ticket = residual_ticket
         if not ticket:
-            options = list(dict.fromkeys(day_synced_keys[day])) + ["Enter custom ticket"]
-            choice = input_choice(f"Select ticket for {day} residual ({deficit_formatted})", options)
-            ticket = choice if choice != "Enter custom ticket" else input("Enter ticket key: ").strip()
+            candidates = list(dict.fromkeys(day_candidate_keys[day]))
+            options = []
+            for key in candidates:
+                summary = issue_summary_cache.get(key)
+                if summary is None:
+                    with create_api_loader(f"Fetching details for {key}") as loader:
+                        summary = jira_api.get_issue_details(key).get("fields", {}).get("summary", "")
+                    issue_summary_cache[key] = summary
+                options.append(f"{key}: {summary}" if summary else key)
+            options.append("Enter custom ticket")
+            choice = input_choice(f"Select ticket for {day} residual ({residual_formatted})", options)
+            if choice == "Enter custom ticket":
+                ticket = input("Enter ticket key: ").strip()
+            else:
+                ticket = choice.split(":")[0].strip()
 
         try:
             with create_api_loader("Validating residual JIRA issue") as loader:
                 issue_details = jira_api.get_issue_details(ticket)
                 issue_id = issue_details["id"]
                 issue_summary = issue_details.get("fields", {}).get("summary", "")
+                issue_summary_cache[ticket] = issue_summary
 
             with create_api_loader("Syncing residual to Tempo") as loader:
                 jira_tempo_api.add_worklog(
                     issue_id=issue_id,
-                    time_spent_seconds=deficit,
+                    time_spent_seconds=rounded_residual,
                     start_date=day,
                     description="Rounding residual",
                 )
             Logger.log_info(Logger.format_message(
-                f"{day}: residual {deficit_formatted} logged to {ticket} ({issue_summary}).",
+                f"{day}: residual {residual_formatted} logged to {ticket} ({issue_summary}).",
                 Logger.INFO,
             ))
         except Exception as e:
@@ -327,11 +358,12 @@ def print_help():
     help_cmd = Logger.format_message("python cli.py sync [start_date] [end_date] [--round-seconds N] [--residual-ticket KEY]", Logger.INFO_SECONDARY)
     Logger.log_info(f"Usage: {help_cmd}")
     Logger.log_info("start_date and end_date are optional. If not provided, the script will prompt for them.")
-    Logger.log_info("--round-seconds: round each entry's duration to this many seconds (default: 60). Larger windows (e.g. 1800 for 30 min) can lose time, recovered via a residual worklog.")
-    Logger.log_info("--residual-ticket: JIRA issue key to receive rounding residual worklogs, skipping the interactive prompt.")
+    Logger.log_info("Any parameter can be passed as a CLI flag OR entered at the interactive prompt; providing a flag skips the prompt.")
+    Logger.log_info("--round-seconds: round each entry's duration to this many seconds (default: 1800, i.e. 30 min). Lost time is recovered via a residual worklog.")
+    Logger.log_info("--residual-ticket: JIRA issue key to receive rounding residual worklogs (skips the per-day ticket prompt; you still confirm before logging).")
 
 
-def main(*args, round_seconds: int = 60, residual_ticket: Optional[str] = None):
+def main(*args, round_seconds: Optional[int] = None, residual_ticket: Optional[str] = None):
     start_date, end_date = None, None
 
     if len(args) > 0 and args[0] == "help":
@@ -353,5 +385,18 @@ def main(*args, round_seconds: int = 60, residual_ticket: Optional[str] = None):
     if not end_date:
         default_date = Logger.format_message(last_working_day, Logger.INFO_SECONDARY)
         end_date = input(f"Enter end date (yyyy-mm-dd) [{default_date}]: ") or last_working_day
+
+    if round_seconds is None:
+        default = 1800
+        default_formatted = Logger.format_message(str(default), Logger.INFO_SECONDARY)
+        round_seconds = int(input(f"Round to seconds [{default_formatted}]: ") or default)
+
+    if residual_ticket is None:
+        residual_ticket = input("Residual ticket (blank = prompt at residual time) [None]: ").strip() or None
+
+    Logger.log_info(Logger.format_message(
+        f"Syncing {start_date} -> {end_date} | round-seconds: {round_seconds} | residual-ticket: {residual_ticket or '(prompt)'}",
+        Logger.INFO_SECONDARY,
+    ))
 
     sync(start_date, end_date, round_seconds=round_seconds, residual_ticket=residual_ticket)
