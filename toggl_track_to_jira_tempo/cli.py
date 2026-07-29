@@ -109,6 +109,7 @@ def main():
     sync_parser.add_argument("end_date", nargs="?", help="End date (YYYY-MM-DD)")
     sync_parser.add_argument("--round-seconds", type=int, default=None, help="Round each entry's duration to this many seconds (default: 1800 = 30 min)")
     sync_parser.add_argument("--residual-ticket", default=None, help="JIRA issue key to receive rounding residual worklogs (skip per-day ticket prompt)")
+    sync_parser.add_argument("--min-logged-seconds", type=int, default=None, help="Minimum duration logged for entries that round to 0 (default: same as --round-seconds)")
 
     # Get-summary command
     summary_parser = subparsers.add_parser("get-summary", help="Generate time tracking summary")
@@ -132,7 +133,7 @@ def main():
             sync_args.append(args.start_date)
         if args.end_date:
             sync_args.append(args.end_date)
-        sync(*sync_args, round_seconds=args.round_seconds, residual_ticket=args.residual_ticket)
+        sync(*sync_args, round_seconds=args.round_seconds, residual_ticket=args.residual_ticket, min_logged_seconds=args.min_logged_seconds)
 
     elif args.command == "get-summary":
         get_summary(*args.args)

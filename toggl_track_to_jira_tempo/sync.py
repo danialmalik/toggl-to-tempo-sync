@@ -52,7 +52,7 @@ def input_or_default(prompt: str, default: str):
     value = input(f"{prompt} [{default_formatted}]: ")
     return value or default
 
-def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1800, residual_ticket: Optional[str] = None):
+def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1800, residual_ticket: Optional[str] = None, min_logged_seconds: Optional[int] = None):
     """
     Sync Toggl time entries to Jira Tempo.
 
@@ -68,6 +68,12 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
         user_email=config.jira.user_email,
         api_token=config.jira.api_token
     )
+
+    # Minimum duration to log for entries that round to 0 (i.e. shorter than
+    # half the rounding window). Defaults to one full rounding window so every
+    # entry can be logged; the user confirms (or adjusts) per entry at runtime.
+    if min_logged_seconds is None:
+        min_logged_seconds = round_seconds
 
     # Initialize sync tracker
     sync_tracker = SyncTracker()
@@ -122,13 +128,28 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
         # Format display strings
         duration_formatted = seconds_to_human_readable(duration)
 
-        # Entries that round to 0 (e.g. <half the rounding window) aren't logged
-        # individually; their raw time is recovered via the day-level residual.
+        # Entries that round to 0 (e.g. <half the rounding window) would be
+        # skipped normally and recovered via the day-level residual. Offer the
+        # user a per-entry choice: log with the minimum, modify, or skip (in
+        # which case raw time still feeds the day-level residual as today).
         if duration == 0:
-            day_raw_totals[entry_date_str] += raw_duration
-            day_candidate_keys[entry_date_str].append(original_issue_key)
-            progress.show_entry_user_skipped("rounded to 0; recovered as residual")
-            continue
+            raw_formatted = seconds_to_human_readable(raw_duration)
+            min_formatted = seconds_to_human_readable(min_logged_seconds)
+            options = ["Log", "Modify", "Skip"]
+            choice = input_choice(
+                f"Entry rounded to 0 (raw {raw_formatted}). Log with minimum {min_formatted}?",
+                options,
+            )
+            if choice == "Skip":
+                day_raw_totals[entry_date_str] += raw_duration
+                day_candidate_keys[entry_date_str].append(original_issue_key)
+                progress.show_entry_user_skipped("rounded to 0; recovered as residual")
+                continue
+            elif choice == "Modify":
+                duration = int(input_or_default("Time spent (seconds)", str(min_logged_seconds)))
+            else:  # Log
+                duration = min_logged_seconds
+            duration_formatted = seconds_to_human_readable(duration)
 
         # Show entry processing start
         progress.start_entry_processing(issue_key, duration_formatted, entry_date_str)
@@ -376,9 +397,10 @@ def print_help():
     Logger.log_info("Any parameter can be passed as a CLI flag OR entered at the interactive prompt; providing a flag skips the prompt.")
     Logger.log_info("--round-seconds: round each entry's duration to this many seconds (default: 1800, i.e. 30 min). Lost time is recovered via a residual worklog.")
     Logger.log_info("--residual-ticket: JIRA issue key to receive rounding residual worklogs (skips the per-day ticket prompt; you still confirm before logging).")
+    Logger.log_info("--min-logged-seconds: minimum duration logged for entries that round to 0 (default: same as --round-seconds). Prompts per entry: Log / Modify / Skip.")
 
 
-def main(*args, round_seconds: Optional[int] = None, residual_ticket: Optional[str] = None):
+def main(*args, round_seconds: Optional[int] = None, residual_ticket: Optional[str] = None, min_logged_seconds: Optional[int] = None):
     start_date, end_date = None, None
 
     if len(args) > 0 and args[0] == "help":
@@ -409,9 +431,14 @@ def main(*args, round_seconds: Optional[int] = None, residual_ticket: Optional[s
     if residual_ticket is None:
         residual_ticket = input("Residual ticket (blank = prompt at residual time) [None]: ").strip() or None
 
+    if min_logged_seconds is None:
+        default = round_seconds
+        default_formatted = Logger.format_message(str(default), Logger.INFO_SECONDARY)
+        min_logged_seconds = int(input(f"Min seconds logged per entry (sub-rounding-window entries) [{default_formatted}]: ") or default)
+
     Logger.log_info(Logger.format_message(
-        f"Syncing {start_date} -> {end_date} | round-seconds: {round_seconds} | residual-ticket: {residual_ticket or '(prompt)'}",
+        f"Syncing {start_date} -> {end_date} | round-seconds: {round_seconds} | min-logged-seconds: {min_logged_seconds} | residual-ticket: {residual_ticket or '(prompt)'}",
         Logger.INFO_SECONDARY,
     ))
 
-    sync(start_date, end_date, round_seconds=round_seconds, residual_ticket=residual_ticket)
+    sync(start_date, end_date, round_seconds=round_seconds, residual_ticket=residual_ticket, min_logged_seconds=min_logged_seconds)
