@@ -128,6 +128,10 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
         # Format display strings
         duration_formatted = seconds_to_human_readable(duration)
 
+        # Show entry processing start before any per-entry prompts so the user
+        # always sees which ticket is being handled (incl. the rounded-to-0 case).
+        progress.start_entry_processing(issue_key, duration_formatted, entry_date_str)
+
         # Entries that round to 0 (e.g. <half the rounding window) would be
         # skipped normally and recovered via the day-level residual. Offer the
         # user a per-entry choice: log with the minimum, modify, or skip (in
@@ -150,9 +154,6 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
             else:  # Log
                 duration = min_logged_seconds
             duration_formatted = seconds_to_human_readable(duration)
-
-        # Show entry processing start
-        progress.start_entry_processing(issue_key, duration_formatted, entry_date_str)
 
         # Get original Toggl IDs (either from grouped entry or single entry)
         original_toggl_ids = entry.get("original_toggl_ids", [entry["id"]])
