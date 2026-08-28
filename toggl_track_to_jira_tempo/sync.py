@@ -139,11 +139,23 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
         if duration == 0:
             raw_formatted = seconds_to_human_readable(raw_duration)
             min_formatted = seconds_to_human_readable(min_logged_seconds)
-            options = ["Log", "Modify", "Skip"]
-            choice = input_choice(
-                f"Entry rounded to 0 (raw {raw_formatted}). Log with minimum {min_formatted}?",
-                options,
+            if issue_key not in issue_summary_cache:
+                with create_api_loader("Fetching JIRA issue details") as loader:
+                    try:
+                        issue_summary = jira_api.get_issue_details(issue_key).get("fields", {}).get("summary", "")
+                    except Exception:
+                        issue_summary = ""
+                    issue_summary_cache[issue_key] = issue_summary
+            issue_summary = issue_summary_cache.get(issue_key, "")
+            toggl_desc = original_issue_description or "(no description)"
+            ticket_line = f"Ticket: {issue_key}" + (f" - {issue_summary}" if issue_summary else "")
+            prompt_msg = (
+                f"Entry rounded to 0 (raw {raw_formatted}). Log with minimum {min_formatted}?\n"
+                f"  {ticket_line}\n"
+                f"  Toggl: {toggl_desc}"
             )
+            options = ["Log", "Modify", "Skip"]
+            choice = input_choice(prompt_msg, options)
             if choice == "Skip":
                 day_raw_totals[entry_date_str] += raw_duration
                 day_candidate_keys[entry_date_str].append(original_issue_key)
