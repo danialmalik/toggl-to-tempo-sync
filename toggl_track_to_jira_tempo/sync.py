@@ -13,8 +13,6 @@ from animated_progress import SyncProgressDisplay, create_api_loader
 from pprint import pprint
 from config import config
 from utils import Logger
-from ticket_parser import parse_description, get_ticket_patterns
-from ui import interactive_available, arrow_select
 
 
 TOGGL_TRACK_AUTH_TOKEN = config.toggl.api_key
@@ -30,12 +28,6 @@ def confirm(message: str):
     return input(f"{message} [y/n]: ").lower().strip() == "y"
 
 def input_choice(prompt: str, choices: list):
-    if interactive_available():
-        try:
-            return arrow_select(prompt, choices)
-        except Exception:
-            pass  # terminal setup failure -> fall back to numeric input
-
     Logger.log_info(prompt)
     for i, choice in enumerate(choices):
         choice_formatted = Logger.format_message(choice, Logger.INFO_SECONDARY)
@@ -111,7 +103,6 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
     issue_summary_cache = {}
 
     total_entries = len(entries)
-    ticket_patterns = get_ticket_patterns()
 
     # Initialize progress display
     progress = SyncProgressDisplay(total_entries)
@@ -119,9 +110,9 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
 
     for entry in entries:
         # Store original entry details for sync tracking
-        parsed = parse_description(entry.get("description"), ticket_patterns)
-        original_issue_key = parsed.ticket
-        original_issue_description = parsed.tempo_description
+        original_issue_key = entry["description"].split(":")[0].strip()
+        original_issue_description = "--" in entry["description"] and entry["description"].split("--")[1] or ""
+        original_issue_description = original_issue_description.strip()
         original_duration = entry["duration"]
         raw_duration = entry["raw_duration"]
         datetime_obj = datetime.datetime.strptime(entry["start"], "%Y-%m-%dT%H:%M:%S+00:00")
@@ -139,20 +130,7 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
 
         # Show entry processing start before any per-entry prompts so the user
         # always sees which ticket is being handled (incl. the rounded-to-0 case).
-        progress.start_entry_processing(issue_key or "(no ticket)", duration_formatted, entry_date_str)
-
-        # Multiple tickets in the description: let the user pick which one
-        # receives the worklog before validation.
-        if issue_key is None and len(parsed.tickets) > 1:
-            options = parsed.tickets + ["Enter custom ticket", "Skip"]
-            choice = input_choice("Multiple tickets found in description. Choose one:", options)
-            if choice == "Skip":
-                day_raw_totals[entry_date_str] += raw_duration
-                day_candidate_keys[entry_date_str].extend(parsed.tickets)
-                progress.show_entry_user_skipped("multiple tickets; skipped")
-                continue
-            issue_key = input("Enter ticket key: ").strip() if choice == "Enter custom ticket" else choice
-            original_issue_key = issue_key
+        progress.start_entry_processing(issue_key, duration_formatted, entry_date_str)
 
         # Entries that round to 0 (e.g. <half the rounding window) would be
         # skipped normally and recovered via the day-level residual. Offer the
@@ -170,7 +148,7 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
                     issue_summary_cache[issue_key] = issue_summary
             issue_summary = issue_summary_cache.get(issue_key, "")
             toggl_desc = original_issue_description or "(no description)"
-            ticket_line = f"Ticket: {issue_key or '(no ticket)'}" + (f" - {issue_summary}" if issue_summary else "")
+            ticket_line = f"Ticket: {issue_key}" + (f" - {issue_summary}" if issue_summary else "")
             prompt_msg = (
                 f"Entry rounded to 0 (raw {raw_formatted}). Log with minimum {min_formatted}?\n"
                 f"  {ticket_line}\n"
@@ -209,8 +187,6 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
 
         while True:
             try:
-                if issue_key is None:
-                    raise ValueError("No JIRA ticket found in the description. Choose 'Manual Entry' to specify one.")
                 # Get issue details with loading animation
                 with create_api_loader("Validating JIRA issue") as loader:
                     issue_details = jira_api.get_issue_details(issue_key)
@@ -287,8 +263,7 @@ def sync(start_date: str, end_date: Optional[str] = None, round_seconds: int = 1
                 progress.show_entry_failed(f"API Error: {str(e)[:100]}...")
 
                 # Format variables for interactive prompts
-                issue_key_displayed = issue_key or "(no ticket)"
-                issue_key_formatted = Logger.format_message(issue_key_displayed, Logger.INFO_SECONDARY)
+                issue_key_formatted = Logger.format_message(issue_key, Logger.INFO_SECONDARY)
                 error_formatted = Logger.format_message(error_message, Logger.ERROR)
                 Logger.log_error(f"Failed to add worklog for {issue_key_formatted}: {error_formatted}")
 
