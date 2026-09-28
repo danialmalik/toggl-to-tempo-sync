@@ -6,7 +6,10 @@ This repository contains scripts to automate the process of creating  Tempo work
 
 ### Guidelines
 
-**Important**: Time entries added in Toggl Track must be in this pattern:
+Time entries in Toggl Track are matched to JIRA issues by detecting the
+issue key in the description.
+
+**Default (recommended) format**:
 
 `<JIRA_ISSUE_KEY>: <GENERAL_DESCRIPTION> -- <DESCRIPTION_FOR_TEMPO>`
 
@@ -17,6 +20,38 @@ This repository contains scripts to automate the process of creating  Tempo work
 Example:
 
 `ABC-123: Frontend bug fix task -- Worked on fixing the bug `
+
+**Flexible detection** (optional): the issue key may also appear *anywhere* in
+the description and is detected via regex. The Tempo description is taken
+from the text after `--` if present, otherwise from the full description with
+the matched ticket token(s) removed.
+
+```
+[ABC-123] backend work              -> ABC-123 / "backend work"
+Worked on fixing ABC-123 -- done     -> ABC-123 / "done"
+refactor ZOL-6968: cleanup -- x      -> ZOL-6968 / "x"
+```
+
+If a description contains **multiple** ticket keys, you are prompted to pick
+which one receives the worklog. Entries with no detectable key fall through to
+the manual-entry flow.
+
+#### Configuring ticket patterns
+
+Ticket patterns come from the optional `ticket_patterns` array in `config.json`.
+When omitted, a default JIRA-style pattern is used:
+`(?<![A-Za-z0-9])[A-Z]{2,5}-\d{1,6}(?![A-Za-z0-9])` (case-insensitive; matched
+keys are upper-cased). Add your own patterns to match non-standard keys, e.g. a
+fixed-width `ZOL-XXXX`:
+
+```json
+"ticket_patterns": [
+    "(?<![A-Za-z0-9])[A-Z]{2,5}-\\d{1,6}(?![A-Za-z0-9])"
+]
+```
+
+Patterns are regexes (note the doubled backslashes in JSON). Word-boundary
+lookarounds avoid matching keys inside other words.
 
 
 ## Usage
@@ -100,6 +135,14 @@ The sync tool now features a beautiful, modern terminal interface with:
 - **🎨 Rich status display**: Emoji-based status indicators for success ✅, skip ⏭️, and failure ❌
 - **📋 Enhanced summaries**: Detailed sync statistics with success rates and visual formatting
 - **⚡ Real-time updates**: Live progress updates as entries are processed
+
+## Choice prompts (arrow keys)
+
+All multi-option prompts (skip / retry / manual entry / residual ticket selection
+/ multiple-ticket selection) use an **arrow-key picker**: use ↑/↓ to move the
+highlight, type a number to jump directly, and press Enter to confirm. When
+the session is not a TTY (piped output, cron) the picker falls back to the
+classic numbered prompt automatically.
 
 The new interface makes it easy to:
 - Track sync progress in real-time

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import os
 import json
 import functools
@@ -24,6 +24,7 @@ class Config:
     toggl: _ToggleConfig
     tempo: _TempoConfig
     jira: _JiraConfig
+    ticket_patterns: list[str] = field(default_factory=list)
 
 
 @functools.cache
@@ -45,7 +46,8 @@ def get_config():
         ),
         jira=_JiraConfig(
             **config_data["jira"]
-        )
+        ),
+        ticket_patterns=config_data.get("ticket_patterns", [])
     )
 
 config = get_config()

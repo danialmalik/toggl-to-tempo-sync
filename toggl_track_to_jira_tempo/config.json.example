@@ -10,5 +10,8 @@
         "subdomain": "YOUR_JIRA_SUBDOMAIN",
         "user_email": "YOUR_JIRA_USER_EMAIL",
         "api_token": "YOUR_JIRA_API_TOKEN"
-    }
+    },
+    "ticket_patterns": [
+        "(?<![A-Za-z0-9])[A-Z]{2,5}-\\d{1,6}(?![A-Za-z0-9])"
+    ]
 }
