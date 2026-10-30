@@ -433,7 +433,7 @@ def print_help():
     Logger.log_info(f"Usage: {help_cmd}")
     Logger.log_info("start_date and end_date are optional. If not provided, the script will prompt for them.")
     Logger.log_info("Any parameter can be passed as a CLI flag OR entered at the interactive prompt; providing a flag skips the prompt.")
-    Logger.log_info("--round-seconds: round each entry's duration to this many seconds (default: 1800, i.e. 30 min). Lost time is recovered via a residual worklog.")
+    Logger.log_info("--round-seconds: round each entry's duration to this many seconds (default: 900, i.e. 15 min). Lost time is recovered via a residual worklog.")
     Logger.log_info("--residual-ticket: JIRA issue key to receive rounding residual worklogs (skips the per-day ticket prompt; you still confirm before logging).")
     Logger.log_info("--min-logged-seconds: minimum duration logged for entries that round to 0 (default: same as --round-seconds). Prompts per entry: Log / Modify / Skip.")
 
@@ -462,7 +462,7 @@ def main(*args, round_seconds: Optional[int] = None, residual_ticket: Optional[s
         end_date = input(f"Enter end date (yyyy-mm-dd) [{default_date}]: ") or last_working_day
 
     if round_seconds is None:
-        default = 1800
+        default = 900
         default_formatted = Logger.format_message(str(default), Logger.INFO_SECONDARY)
         round_seconds = int(input(f"Round to seconds [{default_formatted}]: ") or default)
 
