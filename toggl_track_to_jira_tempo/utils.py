@@ -42,6 +42,7 @@ class Logger:
     @staticmethod
     def format_message(message: str, color=None) -> str:
         color = color or Logger.INFO
+        message = message or ""
         return color + message + Logger._RESET
 
     @staticmethod
